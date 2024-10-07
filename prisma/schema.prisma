@@ -1,0 +1,68 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  firstName String
+  lastName  String
+  email     String
+  password  String
+  isAdmin   Boolean   @default(false)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  bookings  Booking[] @relation("UserBookings")
+}
+
+
+// The Listings model has a field bookings which is an array of Booking objects. 
+// This indicates that a single listing can have multiple bookings associated with it.
+// The relation is named "PropertyBookings".
+model Listings {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  title     String
+  description String
+  city      String
+  price     Float
+  available Boolean
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  bookings  Booking[] @relation("ListingBookings")
+}
+// The Booking model has a field listingId which is a foreign key referencing the id field in the Listings model.
+// The listing field in the Booking model is a relation to the Listings model, using the listingId as the foreign key. 
+// This is part of the "ListingBookings" relation.
+model Booking {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId     String   @db.ObjectId
+  listingId  String   @db.ObjectId
+  checkIn    DateTime
+  checkOut   DateTime
+  totalPrice Float
+  customerId String   @db.ObjectId
+  customer   Customer @relation(fields: [customerId], references: [id], name: "CustomerBookings")
+  user       User     @relation(fields: [userId], references: [id], name: "UserBookings")
+  listing    Listings @relation(fields: [listingId], references: [id], name: "ListingBookings")
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model Customer {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  firstName String
+  lastName  String
+  phone     String
+  email     String
+  bookings  Booking[] @relation("CustomerBookings")
+}
