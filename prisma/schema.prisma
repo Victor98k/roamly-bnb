@@ -13,6 +13,8 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+
+// Users ska har en referenns till userBookings. 
 model User {
   id        String    @id @default(auto()) @map("_id") @db.ObjectId
   firstName String
@@ -29,6 +31,7 @@ model User {
 // The Listings model has a field bookings which is an array of Booking objects. 
 // This indicates that a single listing can have multiple bookings associated with it.
 // The relation is named "PropertyBookings".
+// Listnings har en relation till Bookings som är listingsBookings för att en listing kan ha flera bookings. 
 model Listings {
   id        String    @id @default(auto()) @map("_id") @db.ObjectId
   title     String
@@ -36,13 +39,16 @@ model Listings {
   city      String
   price     Float
   available Boolean
+  image     String?
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   bookings  Booking[] @relation("ListingBookings")
 }
 // The Booking model has a field listingId which is a foreign key referencing the id field in the Listings model.
 // The listing field in the Booking model is a relation to the Listings model, using the listingId as the foreign key. 
-// This is part of the "ListingBookings" relation.
+// This is part of the "ListingBookings" relation.'
+// Booking har en realtion till User, customer och listing. för att varje booking ska kunna associeras med en user, customer och listing. 
+// vilken listing, vilken customer och vilken user ska bokas. 
 model Booking {
   id         String   @id @default(auto()) @map("_id") @db.ObjectId
   userId     String   @db.ObjectId
