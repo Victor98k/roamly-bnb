@@ -41,7 +41,10 @@ export default function Component() {
     <div className="min-h-screen flex flex-col">
       <header className="w-full py-4 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-gray-900   to-black-6 00">
         <nav className="flex justify-between items-center">
-          <Link href="/" className="text-white text-2xl sm:text-3xl font-bold">
+          <Link
+            href="/"
+            className="text-teal-200 text-2xl sm:text-3xl font-bold"
+          >
             Roamly
           </Link>
           <div className="sm:hidden ">

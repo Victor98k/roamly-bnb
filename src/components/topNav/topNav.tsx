@@ -4,7 +4,7 @@ const TopNav: React.FC = () => {
   return (
     <nav className="flex justify-between items-center p-4 bg-gradient-to-r from-gray-900 to-black-600">
       <div className="logo">
-        <h1 className="text-3xl font-bold">Roamly</h1>
+        <h1 className="text-3xl font-bold text-teal-200">Roamly</h1>
       </div>
       <ul className="flex space-x-4">
         <li>

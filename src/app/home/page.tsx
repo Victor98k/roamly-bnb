@@ -16,8 +16,8 @@ export default function Home() {
             </span>
             {/* Desktop */}
             <span className="hidden sm:block">
-              <span className="text-white">Where will you go next? </span>
               <span className="text-teal-200">Roamly </span>
+              <span className="text-white">Where will you go next? </span>
             </span>
           </h1>
           {/* Category Navigation */}
