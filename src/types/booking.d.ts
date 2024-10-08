@@ -1,11 +1,11 @@
-type Customer = {
+export type Customer = {
   firstName: string;
   lastName: string;
   phone: string;
   email: string;
 };
 
-type Booking = {
+export type Booking = {
   id: string;
   createdAt: Date;
   checkIn: Date;

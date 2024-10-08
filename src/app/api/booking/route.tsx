@@ -24,13 +24,13 @@ export async function POST(req: Request) {
       !body.checkIn ||
       !body.checkOut ||
       !body.customer ||
-      !body.customer.firstName || // Ensure customer firstName is provided
-      !body.customer.lastName || // Ensure customer lastName is provided
-      !body.customer.phone || // Ensure customer phone is provided
-      !body.customer.email || // Ensure customer email is provided
-      !body.listingId || // Ensure listingId is provided
+      !body.customer.firstName || 
+      !body.customer.lastName || 
+      !body.customer.phone || 
+      !body.customer.email || 
+      !body.listingId 
       body.totalPrice === undefined ||
-      !body.userId // Ensure userId is provided
+      !body.userId 
     ) {
       hasErrors = true;
       errors = { message: "Missing required fields" };
@@ -53,8 +53,8 @@ export async function POST(req: Request) {
         checkIn: body.checkIn,
         checkOut: body.checkOut,
         totalPrice: body.totalPrice,
-        createdAt: new Date().toISOString(), // Ensure createdAt is set
-        listingId: body.listingId, // Ensure listingId is set
+        createdAt: new Date().toISOString(),
+        listingId: body.listingId,
         userId: body.userId,
         customerId: customerId,
       },

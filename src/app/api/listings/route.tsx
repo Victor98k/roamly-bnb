@@ -10,7 +10,13 @@ export async function POST(req: Request) {
     let [hasErrors, errors] = [false, {}]; // Placeholder for validation logic
 
     // Example validation logic (replace with actual validation)
-    if (!body.title || !body.description || !body.price || !body.city) {
+    if (
+      !body.title ||
+      !body.description ||
+      !body.price ||
+      !body.city ||
+      !body.image
+    ) {
       hasErrors = true;
       errors = { message: "Missing required fields" };
     }
@@ -26,6 +32,7 @@ export async function POST(req: Request) {
         price: body.price,
         city: body.city,
         available: body.available,
+        image: body.image,
       },
     });
 
