@@ -1,57 +1,58 @@
-import { UserLoginData, UserRegistrationData } from "@/types/user";
-import { PrismaClient, User } from "@prisma/client";
-import { NextResponse } from "next/server";
-import { userExists } from "@/utils/prisma";
-import { userLoginValidator } from "@/app/validators/userValidator";
+import { UserLoginData } from "@/types/user";
 import { comparePassword } from "@/utils/bcrypt";
+import { signJWT } from "@/utils/jwt";
+import { userLoginValidator } from "@/app/validators/userValidator";
+import { PrismaClient } from "@prisma/client";
+import { NextRequest, NextResponse } from "next/server";
 
 const prisma = new PrismaClient();
 
-export async function POST(req: Request) {
-  const body: Partial<UserLoginData> = await req.json();
-  let [hasErrors, errors] = [false, {}];
-
-  if (!body.email || !body.password) {
-    hasErrors = true;
-    errors = { message: "Email and password are required" };
-  }
-
-  if (hasErrors) {
-    return NextResponse.json({ errors }, { status: 400 });
-  }
-
-  const { email, password } = body;
-
-  if (hasErrors) {
-    return NextResponse.json(
-      { message: "Validation failed", errors },
-      { status: 400 }
-    );
-  }
-
-  const loginUser = await userExists(email as string, prisma);
-
-  if (loginUser) {
-    const passwordMatch = await comparePassword(
-      password as string,
-      loginUser.password as string
-    );
-
-    if (passwordMatch) {
+export async function POST(request: NextRequest) {
+  try {
+    const body: UserLoginData = await request.json();
+    const [hasErrors, errors] = userLoginValidator(body);
+    if (hasErrors) {
       return NextResponse.json(
-        { message: "Login successful", loginUser },
-        { status: 200 }
-      );
-    } else {
-      return NextResponse.json(
-        { message: "Invalid email or password" },
-        { status: 401 }
+        {
+          errors,
+        },
+        {
+          status: 400,
+        }
       );
     }
-  } else {
+
+    const user = await prisma.user.findUnique({
+      where: {
+        email: body.email.toLowerCase(),
+      },
+    });
+
+    if (!user) {
+      return NextResponse.json(
+        {
+          message: "user matching credentials not found",
+        },
+        { status: 400 }
+      );
+    }
+    const passwordIsSame = await comparePassword(body.password, user.password);
+    if (!passwordIsSame) {
+      throw new Error("Password missmatch");
+    }
+    const token = await signJWT({
+      userId: user.id,
+    });
+    return NextResponse.json({
+      token: token,
+    });
+  } catch (error: any) {
+    console.log("Error: failed to login", error.message);
     return NextResponse.json(
-      { message: "Invalid email or password" },
-      { status: 401 }
+      {
+        message: "user matching credentials not found",
+      },
+      { status: 400 }
     );
   }
 }

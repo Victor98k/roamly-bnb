@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 import { User } from "@/types/user";
 import { hashPassword } from "@/utils/bcrypt";
+import { signJWT } from "@/utils/jwt";
 const prisma = new PrismaClient();
 
 export async function POST(req: Request) {
@@ -30,7 +31,15 @@ export async function POST(req: Request) {
       },
     });
 
-    return NextResponse.json(newUser, { status: 201 });
+    const token = await signJWT({
+      userId: newUser.id,
+    });
+    return NextResponse.json(
+      {
+        token,
+      },
+      { status: 201 }
+    );
   } catch (error: any) {
     console.error("Error processing request:", error.message);
     return NextResponse.json(
