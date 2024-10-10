@@ -4,7 +4,6 @@ import { Booking, Customer } from "@/types/booking";
 
 const prisma = new PrismaClient();
 
-// Assuming you have a function to create a customer and return its ID
 async function createCustomer(customerData: Partial<Customer>) {
   const newCustomer = await prisma.customer.create({
     data: customerData,
@@ -17,8 +16,7 @@ export async function POST(req: Request) {
     const body: Partial<Booking> = await req.json();
     let [hasErrors, errors] = [false, {}];
 
-    // Log the incoming request body for debugging
-    console.log("Request body:", body);
+    // console.log("Request body:", body);
 
     if (
       !body.checkIn ||
@@ -42,9 +40,13 @@ export async function POST(req: Request) {
     }
 
     const customerId = await createCustomer({
+      // @ts-ignore
       firstName: body.customer.firstName,
+      // @ts-ignore
       lastName: body.customer.lastName,
+      // @ts-ignore
       phone: body.customer.phone,
+      // @ts-ignore
       email: body.customer.email,
     });
 

@@ -1,15 +1,14 @@
 import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
-import { Listing } from "@/types/listings"; // Ensure the path is correct
+import { Listing } from "@/types/listings";
 
 const prisma = new PrismaClient();
 
 export async function POST(req: Request) {
   try {
     const body: Partial<Listing> = await req.json();
-    let [hasErrors, errors] = [false, {}]; // Placeholder for validation logic
+    let [hasErrors, errors] = [false, {}];
 
-    // Example validation logic (replace with actual validation)
     if (
       !body.title ||
       !body.description ||
