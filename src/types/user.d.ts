@@ -20,3 +20,9 @@ export type UserLoginData = {
   email: string;
   password: string;
 };
+
+export type UserResetPasswordData = {
+  email: string;
+  newPassword: string;
+  uuid: string;
+};

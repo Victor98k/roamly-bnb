@@ -22,9 +22,9 @@ export async function POST(req: Request) {
     // To create an admin user do so with postman.
     const newUser = await prisma.user.create({
       data: {
-        firstName: body.firstName,
-        lastName: body.lastName,
-        email: body.email,
+        firstName: body.firstName as string,
+        lastName: body.lastName as string,
+        email: body.email as string,
         password: await hashPassword(body.password as string),
         isAdmin: body.isAdmin,
       },
