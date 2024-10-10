@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 import { User } from "@/types/user";
+import { hashPassword } from "@/utils/bcrypt";
 const prisma = new PrismaClient();
 
 export async function POST(req: Request) {
@@ -24,7 +25,7 @@ export async function POST(req: Request) {
         firstName: body.firstName,
         lastName: body.lastName,
         email: body.email,
-        password: body.password,
+        password: await hashPassword(body.password as string),
         isAdmin: body.isAdmin,
       },
     });
