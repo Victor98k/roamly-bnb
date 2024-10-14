@@ -1,9 +1,21 @@
+"use client";
+
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import TopNav from "@/components/topNav/topNav";
 
 import ListingCards from "@/components/listingCards/listingCards";
+
 export default function Home() {
+  const router = useRouter();
+
+  const handleLogout = () => {
+    // Clear local storage
+    localStorage.clear();
+    // Redirect to home page
+    router.push("/");
+  };
+
   return (
     <>
       <TopNav />
@@ -36,6 +48,13 @@ export default function Home() {
             </span>
           </div>
           <ListingCards />
+          {/* Logout Button */}
+          <button
+            onClick={handleLogout}
+            className="mt-4 px-4 py-2 bg-red-600 text-white rounded-full hover:bg-red-700 transition duration-300"
+          >
+            Logout
+          </button>
         </div>
       </div>
     </>

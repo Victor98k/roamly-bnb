@@ -1,7 +1,7 @@
 import { UserLoginData } from "@/types/user";
 import { comparePassword } from "@/utils/bcrypt";
 import { signJWT } from "@/utils/jwt";
-import { userLoginValidator } from "@/app/validators/userValidator";
+import { userLoginValidator } from "@/utils/validators/userValidator";
 import { PrismaClient } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 

@@ -1,4 +1,5 @@
 import React from "react";
+import Link from "next/link";
 
 const TopNav: React.FC = () => {
   return (
@@ -8,9 +9,9 @@ const TopNav: React.FC = () => {
       </div>
       <ul className="flex space-x-4">
         <li>
-          <a href="#link1" className="text-white hover:text-teal-200">
+          <Link href="/" className="text-white hover:text-teal-200">
             <h2 className="text-xl font-bold">Home</h2>
-          </a>
+          </Link>
         </li>
         <li>
           <a href="#link2" className="text-white hover:text-teal-200">

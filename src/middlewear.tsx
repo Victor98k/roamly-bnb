@@ -2,10 +2,16 @@ import { NextRequest, NextResponse } from "next/server";
 import { verifyJWT } from "./utils/jwt";
 
 const UNSAFE_METHODS = ["POST", "PUT", "PATCH", "DELETE"];
+const UNSAFE_REQUESTS = ["/api/users/me"];
 
 export async function middleware(request: NextRequest) {
-  console.log("middleware called");
-  if (UNSAFE_METHODS.includes(request.method)) {
+  const url = new URL(request.url);
+
+  console.log("middleware called", url.pathname);
+  if (
+    UNSAFE_METHODS.includes(request.method) ||
+    UNSAFE_REQUESTS.includes(url.pathname)
+  ) {
     try {
       console.log("Unsafe");
       const Authorization = request.headers.get("Authorization");
@@ -26,9 +32,7 @@ export async function middleware(request: NextRequest) {
       const headers = new Headers(request.headers);
       headers.set("userId", decryptedToken.userId);
       return NextResponse.next({
-        request: {
-          headers,
-        },
+        headers,
       });
     } catch (error: any) {
       console.log("Error validating token: ", error.message);
@@ -45,5 +49,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/api/authors/", "/api/authors/:id*"],
+  matcher: ["/api/authors/", "/api/authors/:id*", "/api/users/me"],
 };

@@ -140,7 +140,7 @@ export default function Component() {
               onMouseEnter={() => setIsHovered(true)}
               onMouseLeave={() => setIsHovered(false)}
             >
-              <Link href="/home" className="flex items-center">
+              <Link href="/login" className="flex items-center">
                 <span className="mr-2">Sign In</span>
                 <motion.span
                   animate={{ x: isHovered ? 5 : 0 }}
@@ -155,7 +155,7 @@ export default function Component() {
               size="lg"
               className="w-full sm:w-auto px-8 py-4 text-lg bg-transparent border-2 border-white text-white hover:bg-white hover:text-blue-600 transition-colors"
             >
-              <Link href="/home" className="flex items-center">
+              <Link href="/sign-up" className="flex items-center">
                 <span className="mr-2">Sign Up</span>
                 <UserPlus className="inline-block" />
               </Link>

@@ -27,6 +27,7 @@ export async function signJWT(payload: JWTUserPayload): Promise<string> {
 export async function verifyJWT(token: string): Promise<JWTUserPayload | null> {
   try {
     const { payload } = await Jose.jwtVerify(token, encodedSecret);
+
     return payload as JWTUserPayload;
   } catch (e) {
     console.error("JWT verification failed");
