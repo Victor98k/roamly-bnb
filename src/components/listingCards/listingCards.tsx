@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-// import { Button } from "@/components/ui/button";
 import {
   Modal,
   DatePicker,
@@ -10,7 +9,11 @@ import {
   message,
   Space,
   notification,
+  Popconfirm,
+  Drawer,
 } from "antd";
+import type { PopconfirmProps } from "antd";
+import { HeartFilled } from "@ant-design/icons";
 import {
   Card,
   CardContent,
@@ -28,7 +31,7 @@ export default function ListingCards() {
   const [messageApi] = message.useMessage();
   const [listings, setListings] = useState<Listing[]>([]);
   const [selectedListing, setSelectedListing] = useState<Listing | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [checkInDate, setCheckInDate] = useState<Date>();
   const [checkOutDate, setCheckOutDate] = useState<Date>();
   const [totalPrice, setTotalPrice] = useState(0);
@@ -50,6 +53,8 @@ export default function ListingCards() {
     fetchListings();
   }, []);
 
+  // When making a new booking it may cause an error if the userId is not set.
+
   useEffect(() => {
     if (checkInDate && checkOutDate && selectedListing) {
       const days = dayjs(checkOutDate).diff(dayjs(checkInDate), "day");
@@ -63,14 +68,18 @@ export default function ListingCards() {
       return;
     }
 
+    const userId = localStorage.getItem("userId") || "";
+
     const bookingData: Partial<Booking> = {
       checkIn: checkInDate,
       checkOut: checkOutDate,
       totalPrice: totalPrice,
       customer: customer,
       listingId: selectedListing.id,
-      userId: localStorage.getItem("userId") || "",
+      userId: userId,
     };
+
+    console.log("Booking Data:", bookingData);
 
     try {
       const response = await fetch("/api/booking", {
@@ -94,8 +103,7 @@ export default function ListingCards() {
       const newBooking = await response.json();
       console.log("Booking created successfully:", newBooking);
 
-      // Reset state after successful booking
-      setIsModalOpen(false);
+      setIsDrawerOpen(false);
       setCheckInDate(undefined);
       setCheckOutDate(undefined);
       setCustomer({
@@ -111,21 +119,21 @@ export default function ListingCards() {
         description: "Booking created successfully.",
       });
     } catch (error) {
-      // console.error("Error creating booking:", error);
+      console.error("Error creating booking:", error);
     }
   };
 
-  const showModal = () => {
-    setIsModalOpen(true);
+  const showDrawer = () => {
+    setIsDrawerOpen(true);
+  };
+
+  const handleDrawerClose = () => {
+    setIsDrawerOpen(false);
   };
 
   const handleOk = () => {
     handleBooking();
     success();
-  };
-
-  const handleCancel = () => {
-    setIsModalOpen(false);
   };
 
   const success = () => {
@@ -134,19 +142,30 @@ export default function ListingCards() {
       content: "Booking created successfully",
     });
   };
+  const confirm: PopconfirmProps["onConfirm"] = (e) => {
+    console.log(e);
+    message.success("Booking created successfully");
+  };
+
+  const cancel: PopconfirmProps["onCancel"] = (e) => {
+    console.log(e);
+    message.error("Booking not created");
+  };
 
   return (
     <div className="container mx-auto p-4">
       {contextHolder}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-1">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {listings.map((listing) => (
           <Card
             key={listing.id}
-            className="overflow-hidden w-full max-w-l bg-slate-400"
+            className="overflow-hidden w-full max-w-md bg-slate-400"
           >
             <CardHeader>
               <CardTitle>{listing.title}</CardTitle>
-              <CardDescription>{listing.city}</CardDescription>
+              <CardTitle className="text-sm text-gray-800 underline mt-2">
+                {listing.city}
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <img
@@ -163,23 +182,24 @@ export default function ListingCards() {
               <Button
                 onClick={() => {
                   setSelectedListing(listing);
-                  showModal();
+                  showDrawer();
                 }}
                 disabled={!listing.available}
-                className="bg-teal-200 text-black hover:bg-teal-300 border border-gray-400 rounded-3xl px-4 py-2 mr-2"
+                className="bg-teal-200 text-black hover:bg-teal-300 border  border-gray-400 rounded-3xl px-4 py-2 mr-2"
               >
                 {listing.available ? "Book Now" : "Unavailable"}
               </Button>
-              <Modal
-                className=""
+              <Drawer
                 title={`Book ${selectedListing?.title}`}
-                open={isModalOpen}
-                onOk={handleOk}
-                okText="Complete Booking"
-                onCancel={handleCancel}
+                open={isDrawerOpen}
+                onClose={handleDrawerClose}
+                maskStyle={{ backgroundColor: "transparent" }}
               >
+                <img
+                  src={selectedListing?.image}
+                  alt={selectedListing?.title}
+                />
                 <div className="grid gap-4 py-4 ">
-                  {/* Check-In Date Picker */}
                   <DatePicker
                     placeholder="Check-In Date"
                     value={checkInDate ? dayjs(checkInDate) : null}
@@ -188,7 +208,7 @@ export default function ListingCards() {
                     }
                     style={{ width: "100%" }}
                   />
-                  {/* Check-Out Date Picker */}
+
                   <DatePicker
                     placeholder="Check-Out Date"
                     value={checkOutDate ? dayjs(checkOutDate) : null}
@@ -197,9 +217,7 @@ export default function ListingCards() {
                     }
                     style={{ width: "100%" }}
                   />
-                  {/* Total Price Display */}
-                  <p className="font-bold">Total Price: ${totalPrice}</p>
-                  {/* Customer Inputs */}
+
                   <Input
                     placeholder="First Name"
                     value={customer.firstName}
@@ -229,13 +247,24 @@ export default function ListingCards() {
                       setCustomer({ ...customer, email: e.target.value })
                     }
                   />
+                  <p className="font-bold">Total Price: ${totalPrice}</p>
                 </div>
-              </Modal>
+                <Popconfirm
+                  title={`Are you sure you want to complete the booking? \n Total Price: $${totalPrice}`}
+                  description="Click 'Yes' to confirm the booking."
+                  onConfirm={handleOk}
+                  onCancel={cancel}
+                  okText="Yes"
+                  cancelText="No"
+                >
+                  <Button type="primary">Complete Booking</Button>
+                </Popconfirm>
+              </Drawer>
               <Button className="bg-teal-200 text-black hover:bg-teal-300 border border-gray-400 rounded-3xl px-4 py-2 mr-2">
                 Details
               </Button>
               <Button className="bg-teal-200 text-black hover:bg-teal-300 border border-gray-400 rounded-3xl px-4 py-2">
-                Save
+                <HeartFilled />
               </Button>
             </CardFooter>
           </Card>

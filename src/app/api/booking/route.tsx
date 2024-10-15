@@ -16,8 +16,6 @@ export async function POST(req: Request) {
     const body: Partial<Booking> = await req.json();
     let [hasErrors, errors] = [false, {}];
 
-    // console.log("Request body:", body);
-
     if (
       !body.checkIn ||
       !body.checkOut ||
@@ -52,9 +50,9 @@ export async function POST(req: Request) {
 
     const newBooking = await prisma.booking.create({
       data: {
-        checkIn: body.checkIn,
-        checkOut: body.checkOut,
-        totalPrice: body.totalPrice,
+        checkIn: body.checkIn || new Date().toISOString(),
+        checkOut: body.checkOut || new Date().toISOString(),
+        totalPrice: body.totalPrice ?? 0, // Provide a default value if undefined
         createdAt: new Date().toISOString(),
         listingId: body.listingId,
         userId: body.userId,

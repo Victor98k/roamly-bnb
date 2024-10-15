@@ -15,5 +15,5 @@ export type Booking = {
   createdBy: string;
   property: string;
   userId: string;
-  propertyId: string;
+  listingId: string;
 };

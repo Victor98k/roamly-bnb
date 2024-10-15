@@ -9,13 +9,6 @@ import ListingCards from "@/components/listingCards/listingCards";
 export default function Home() {
   const router = useRouter();
 
-  const handleLogout = () => {
-    // Clear local storage
-    localStorage.clear();
-    // Redirect to home page
-    router.push("/");
-  };
-
   return (
     <>
       <TopNav />
@@ -27,24 +20,38 @@ export default function Home() {
               Discover <span className="text-teal-200">Roamly</span>
             </span>
             {/* Desktop */}
-            <span className="hidden sm:block">
-              <span className="text-teal-200">Roamly </span>
-              <span className="text-white">Where will you go next? </span>
-            </span>
+            <div className="text-center">
+              <span className="block text-teal-200">Roamly</span>
+              <span className="block text-white">Where will you go next?</span>
+            </div>
           </h1>
           {/* Category Navigation */}
           <div className="flex justify-center items-center bg-gray-900 border rounded-full p-4 mb-8">
-            <span className="text-white mx-7 cursor-pointer hover:bg-white hover:text-black hover:rounded-full hover:border hover:border-teal-200 transition duration-300">
+            <span className="text-teal-200 mx-7 cursor-pointer  hover:text-white hover:rounded-full hover:underline hover:underline-offset-4 hover:border-teal-200 transition duration-300">
               Sunny
             </span>
-            <span className="text-white mx-7 cursor-pointer hover:bg-white hover:text-black hover:rounded-full hover:border hover:border-teal-200 transition duration-300">
+            <span className="text-teal-200 mx-7 cursor-pointer  hover:text-white hover:rounded-full hover:underline hover:underline-offset-4 hover:border-teal-200 transition duration-300">
               Snow
             </span>
-            <span className="text-white mx-7 cursor-pointer hover:bg-white hover:text-black hover:rounded-full hover:border hover:border-teal-200 transition duration-300">
+            <span className="text-teal-200 mx-7 cursor-pointer  hover:text-white hover:rounded-full hover:underline hover:underline-offset-4 hover:border-teal-200 transition duration-300">
               Tropical
             </span>
-            <span className="text-white mx-7 cursor-pointer hover:bg-white hover:text-black hover:rounded-full hover:border hover:border-teal-200 transition duration-300">
+            <span className="text-teal-200 mx-7 cursor-pointer  hover:text-white hover:rounded-full hover:underline hover:underline-offset-4 hover:border-teal-200 transition duration-300">
               Adventure
+            </span>
+            <span className="text-teal-200 mx-7 cursor-pointer  hover:text-white hover:rounded-full hover:underline hover:underline-offset-4 hover:border-teal-200 transition duration-300">
+              <button
+                className="text-teal-200 mx-7 cursor-pointer  hover:text-white hover:rounded-full hover:underline hover:underline-offset-4 hover:border-teal-200 transition duration-300"
+                onClick={() => router.push("/my-bookings")}
+              >
+                My Bookings
+              </button>
+              {/* <button
+                className="border bg-teal-200 hover:bg-teal-300 text-black rounded-full px-4 py-2"
+                onClick={() => router.push("/my-bookings")}
+              >
+                My Bookings
+              </button> */}
             </span>
           </div>
           <ListingCards />

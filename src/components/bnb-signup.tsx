@@ -2,6 +2,7 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+
 import {
   Card,
   CardContent,
@@ -188,6 +189,7 @@ export function Signup() {
             <Button
               variant="link"
               className="w-full text-sm text-slate-500 dark:text-slate-400"
+              onClick={() => router.push("/login")}
             >
               Already have an account? Log in
             </Button>
