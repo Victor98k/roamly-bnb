@@ -43,8 +43,10 @@ export async function POST(request: NextRequest) {
     const token = await signJWT({
       userId: user.id,
     });
+
     return NextResponse.json({
       token: token,
+      userId: user.id,
     });
   } catch (error: any) {
     console.log("Error: failed to login", error.message);

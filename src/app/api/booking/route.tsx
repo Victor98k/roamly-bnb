@@ -22,13 +22,13 @@ export async function POST(req: Request) {
       !body.checkIn ||
       !body.checkOut ||
       !body.customer ||
-      !body.customer.firstName || 
-      !body.customer.lastName || 
-      !body.customer.phone || 
-      !body.customer.email || 
-      !body.listingId 
+      !body.customer.firstName ||
+      !body.customer.lastName ||
+      !body.customer.phone ||
+      !body.customer.email ||
+      !body.listingId ||
       body.totalPrice === undefined ||
-      !body.userId 
+      !body.userId
     ) {
       hasErrors = true;
       errors = { message: "Missing required fields" };

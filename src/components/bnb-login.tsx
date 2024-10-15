@@ -54,9 +54,11 @@ export function Login() {
       });
 
       const data = await response.json();
-      console.log("Login successful:", data);
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("userId", data.userId);
+      // console.log("Login successful:", data);
 
-      router.push("/home"); // Redirect only on successful login
+      router.push("/home");
     } catch (error) {
       console.error("Error during login:", error);
       setAlert({
@@ -69,7 +71,6 @@ export function Login() {
 
   return (
     <>
-      <TopNav />
       <div className="min-h-screen flex flex-col items-center justify-center from-gray-900   to-black-6 00">
         {alert && (
           <div className="mb-4 w-full max-w-md">

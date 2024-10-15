@@ -76,7 +76,6 @@ export function Signup() {
 
   return (
     <>
-      <TopNav />
       <div className="min-h-screen flex items-center justify-center from-gray-900 to-black-600">
         <Card className="w-full max-w-md">
           {/* Render alert if it exists */}

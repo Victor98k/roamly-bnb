@@ -1,9 +1,16 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Calendar } from "@/components/ui/calendar";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+// import { Button } from "@/components/ui/button";
+import {
+  Modal,
+  DatePicker,
+  Input,
+  Button,
+  message,
+  Space,
+  notification,
+} from "antd";
 import {
   Card,
   CardContent,
@@ -12,41 +19,26 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { format } from "date-fns";
-import { Calendar as CalendarIcon } from "lucide-react";
-import { cn } from "@/lib/utils";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import dayjs from "dayjs";
 
-interface Listing {
-  id: string;
-  title: string;
-  image: string;
-  description: string;
-  city: string;
-  price: number;
-  available: boolean;
-}
+import { Listing } from "@/types/listings";
+import { Booking, Customer } from "@/types/booking";
 
 export default function ListingCards() {
+  const [messageApi] = message.useMessage();
   const [listings, setListings] = useState<Listing[]>([]);
   const [selectedListing, setSelectedListing] = useState<Listing | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [date, setDate] = useState<Date>();
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
+  const [checkInDate, setCheckInDate] = useState<Date>();
+  const [checkOutDate, setCheckOutDate] = useState<Date>();
+  const [totalPrice, setTotalPrice] = useState(0);
+  const [customer, setCustomer] = useState<Customer>({
+    firstName: "",
+    lastName: "",
+    phone: "",
+    email: "",
+  });
+  const [api, contextHolder] = notification.useNotification();
 
   useEffect(() => {
     const fetchListings = async () => {
@@ -58,18 +50,94 @@ export default function ListingCards() {
     fetchListings();
   }, []);
 
-  const handleBooking = () => {
-    // Handle the booking process here
-    console.log("Booking:", { listing: selectedListing, date, name, email });
+  useEffect(() => {
+    if (checkInDate && checkOutDate && selectedListing) {
+      const days = dayjs(checkOutDate).diff(dayjs(checkInDate), "day");
+      setTotalPrice(days * selectedListing.price);
+    }
+  }, [checkInDate, checkOutDate, selectedListing]);
+
+  const handleBooking = async () => {
+    if (!selectedListing || !checkInDate || !checkOutDate) {
+      console.error("Missing booking details");
+      return;
+    }
+
+    const bookingData: Partial<Booking> = {
+      checkIn: checkInDate,
+      checkOut: checkOutDate,
+      totalPrice: totalPrice,
+      customer: customer,
+      listingId: selectedListing.id,
+      userId: localStorage.getItem("userId") || "",
+    };
+
+    try {
+      const response = await fetch("/api/booking", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(bookingData),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error("Error creating booking:", errorData);
+        api.error({
+          message: "Booking Error",
+          description: "Booking could not be completed.",
+        });
+        return;
+      }
+
+      const newBooking = await response.json();
+      console.log("Booking created successfully:", newBooking);
+
+      // Reset state after successful booking
+      setIsModalOpen(false);
+      setCheckInDate(undefined);
+      setCheckOutDate(undefined);
+      setCustomer({
+        firstName: "",
+        lastName: "",
+        phone: "",
+        email: "",
+      });
+      setTotalPrice(0);
+
+      api.success({
+        message: "Booking Success",
+        description: "Booking created successfully.",
+      });
+    } catch (error) {
+      // console.error("Error creating booking:", error);
+    }
+  };
+
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleOk = () => {
+    handleBooking();
+    success();
+  };
+
+  const handleCancel = () => {
     setIsModalOpen(false);
-    // Reset form fields
-    setDate(undefined);
-    setName("");
-    setEmail("");
+  };
+
+  const success = () => {
+    messageApi.open({
+      type: "success",
+      content: "Booking created successfully",
+    });
   };
 
   return (
     <div className="container mx-auto p-4">
+      {contextHolder}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-1">
         {listings.map((listing) => (
           <Card
@@ -92,68 +160,77 @@ export default function ListingCards() {
               <p className="font-bold">${listing.price} / night</p>
             </CardContent>
             <CardFooter>
-              <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-                <DialogTrigger asChild>
-                  <Button
-                    onClick={() => setSelectedListing(listing)}
-                    disabled={!listing.available}
-                    className="bg-teal-200 text-black hover:bg-teal-300 border border-gray-400 rounded-3xl px-4 py-2 mr-2"
-                  >
-                    {listing.available ? "Book Now" : "Unavailable"}
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="sm:max-w-[425px]">
-                  <DialogHeader>
-                    <DialogTitle>Book {selectedListing?.title}</DialogTitle>
-                    <DialogDescription>
-                      Make your reservation for {selectedListing?.city}. Click
-                      finish when you're done.
-                    </DialogDescription>
-                  </DialogHeader>
-                  <div className="grid gap-4 py-4">
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <Button
-                          variant={"outline"}
-                          className={cn(
-                            "w-full justify-start text-left font-normal",
-                            !date && "text-muted-foreground"
-                          )}
-                        >
-                          <CalendarIcon className="mr-2 h-4 w-4" />
-                          {date ? (
-                            format(date, "PPP")
-                          ) : (
-                            <span>Pick a date</span>
-                          )}
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0">
-                        <Calendar
-                          mode="single"
-                          selected={date}
-                          onSelect={setDate}
-                          initialFocus
-                        />
-                      </PopoverContent>
-                    </Popover>
-                    <Input
-                      placeholder="Enter your name"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                    />
-                    <Input
-                      placeholder="Enter your email"
-                      type="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                    />
-                  </div>
-                  <DialogFooter>
-                    <Button onClick={handleBooking}>Finish Booking</Button>
-                  </DialogFooter>
-                </DialogContent>
-              </Dialog>
+              <Button
+                onClick={() => {
+                  setSelectedListing(listing);
+                  showModal();
+                }}
+                disabled={!listing.available}
+                className="bg-teal-200 text-black hover:bg-teal-300 border border-gray-400 rounded-3xl px-4 py-2 mr-2"
+              >
+                {listing.available ? "Book Now" : "Unavailable"}
+              </Button>
+              <Modal
+                className=""
+                title={`Book ${selectedListing?.title}`}
+                open={isModalOpen}
+                onOk={handleOk}
+                okText="Complete Booking"
+                onCancel={handleCancel}
+              >
+                <div className="grid gap-4 py-4 ">
+                  {/* Check-In Date Picker */}
+                  <DatePicker
+                    placeholder="Check-In Date"
+                    value={checkInDate ? dayjs(checkInDate) : null}
+                    onChange={(date) =>
+                      setCheckInDate(date ? date.toDate() : undefined)
+                    }
+                    style={{ width: "100%" }}
+                  />
+                  {/* Check-Out Date Picker */}
+                  <DatePicker
+                    placeholder="Check-Out Date"
+                    value={checkOutDate ? dayjs(checkOutDate) : null}
+                    onChange={(date) =>
+                      setCheckOutDate(date ? date.toDate() : undefined)
+                    }
+                    style={{ width: "100%" }}
+                  />
+                  {/* Total Price Display */}
+                  <p className="font-bold">Total Price: ${totalPrice}</p>
+                  {/* Customer Inputs */}
+                  <Input
+                    placeholder="First Name"
+                    value={customer.firstName}
+                    onChange={(e) =>
+                      setCustomer({ ...customer, firstName: e.target.value })
+                    }
+                  />
+                  <Input
+                    placeholder="Last Name"
+                    value={customer.lastName}
+                    onChange={(e) =>
+                      setCustomer({ ...customer, lastName: e.target.value })
+                    }
+                  />
+                  <Input
+                    placeholder="Phone"
+                    value={customer.phone}
+                    onChange={(e) =>
+                      setCustomer({ ...customer, phone: e.target.value })
+                    }
+                  />
+                  <Input
+                    placeholder="Email"
+                    type="email"
+                    value={customer.email}
+                    onChange={(e) =>
+                      setCustomer({ ...customer, email: e.target.value })
+                    }
+                  />
+                </div>
+              </Modal>
               <Button className="bg-teal-200 text-black hover:bg-teal-300 border border-gray-400 rounded-3xl px-4 py-2 mr-2">
                 Details
               </Button>

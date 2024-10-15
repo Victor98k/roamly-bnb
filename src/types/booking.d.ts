@@ -14,6 +14,6 @@ export type Booking = {
   customer: Customer;
   createdBy: string;
   property: string;
-  userId: string; // Ensure this is included
-  propertyId: string; // Ensure this is included if needed
+  userId: string;
+  propertyId: string;
 };
