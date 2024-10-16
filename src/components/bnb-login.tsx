@@ -15,8 +15,8 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Facebook, Mail, Terminal } from "lucide-react";
-import { Alert } from "antd"; // Import Ant Design's Alert
-import TopNav from "@/components/topNav/topNav";
+import { Alert } from "antd";
+
 export function Login() {
   const [email, setEmail] = useState("''");
   const [password, setPassword] = useState("''");
@@ -71,7 +71,7 @@ export function Login() {
 
   return (
     <>
-      <div className="min-h-screen flex flex-col items-center justify-center from-gray-900   to-black-6 00">
+      <div className="min-h-screen flex flex-col items-center justify-center from-gray-900   to-black-600">
         {alert && (
           <div className="mb-4 w-full max-w-md">
             <Alert
@@ -80,7 +80,7 @@ export function Login() {
               type={alert.type}
               showIcon
               closable
-              onClose={() => setAlert(null)} // Clear alert on close
+              onClose={() => setAlert(null)}
             />
           </div>
         )}
