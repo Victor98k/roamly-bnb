@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100&family=Montserrat:wght@100;200;300;400;500;600;700;800;900&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -8,6 +8,7 @@
   --background: #ffffff;
   --foreground: #171717;
   /* --font-poppins-thin: "Poppins", sans-serif; */
+  --font-montserrat: "Montserrat", sans-serif; /* Added Montserrat font */
 }
 
 @media (prefers-color-scheme: dark) {
@@ -20,7 +21,8 @@
 body {
   color: var(--foreground);
   background: var(--background);
-  /* font-family: var(--font-poppins-thin), Arial, Helvetica, sans-serif; */
+
+  font-family: var(--font-montserrat), Arial, Helvetica, sans-serif;
 }
 
 @layer utilities {

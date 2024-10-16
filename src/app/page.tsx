@@ -109,7 +109,7 @@ export default function Component() {
           animate="visible"
         >
           <motion.h1
-            className="text-4xl  md:text-6xl lg:text-7xl font-bold mb-6 mx-4 sm:mx-8 lg:mx-12 lg:mb-12 lg:mt-28"
+            className="text-4xl  md:text-6xl lg:text-8xl font-bold mb-6 mx-4 sm:mx-8 lg:mx-12 lg:mb-12 lg:mt-28"
             variants={itemVariants}
           >
             <span className="block sm:hidden text-5xl text-white">
@@ -136,7 +136,7 @@ export default function Component() {
             <button
               variant="default"
               size="lg"
-              className="w-full sm:w-auto px-8 py-4 text-lg bg-teal-400 text-blue-900 hover:bg-teal-300 transition-colors"
+              className="w-full sm:w-auto px-8 py-4 text-lg rounded-full bg-teal-400 text-blue-900 hover:bg-teal-300 transition-colors"
               onMouseEnter={() => setIsHovered(true)}
               onMouseLeave={() => setIsHovered(false)}
             >
@@ -153,7 +153,7 @@ export default function Component() {
             <button
               variant="outline"
               size="lg"
-              className="w-full sm:w-auto px-8 py-4 text-lg bg-transparent border-2 border-white text-white hover:bg-white hover:text-blue-600 transition-colors"
+              className="w-full sm:w-auto px-8 py-4 text-lg bg-transparent rounded-full border-2 border-white text-white hover:bg-white hover:text-blue-600 transition-colors"
             >
               <Link href="/sign-up" className="flex items-center">
                 <span className="mr-2">Sign Up</span>
@@ -201,7 +201,7 @@ export default function Component() {
             </Link>
           </motion.div>
 
-          <ParallaxImage imageSrc="" />
+          {/* <ParallaxImage imageSrc="" /> */}
         </motion.div>
       </main>
     </div>

@@ -3,16 +3,27 @@
 import { useEffect, useState } from "react";
 import TopNav from "@/components/topNav/topNav";
 import { useRouter } from "next/navigation";
+import { Popconfirm, notification, message } from "antd";
 
-import { Card } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 import { Listing } from "@/types/listings";
 import { Booking } from "@/types/booking";
 
 function MyBookings() {
   const router = useRouter();
+  const [messageApi] = message.useMessage();
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [listings, setListings] = useState<{ [key: string]: Listing }>({});
+
+  const [api, contextHolder] = notification.useNotification();
 
   useEffect(() => {
     const fetchBookings = async () => {
@@ -67,6 +78,35 @@ function MyBookings() {
     fetchBookings();
   }, [listings]);
 
+  const handleDeleteBooking = async (bookingId: string) => {
+    try {
+      const response = await fetch(`/api/booking/${bookingId}`, {
+        method: "DELETE",
+      });
+      if (!response.ok) {
+        throw new Error(`Error deleting booking: ${response.statusText}`);
+      }
+      // remove the deleted booking from the bookings state
+      setBookings((prevBookings) =>
+        prevBookings.filter((booking) => booking.id !== bookingId)
+      );
+      api.success({
+        message: "Booking Deleted",
+        description: "Booking has been deleted successfully.",
+      });
+      notification.success({
+        message: "Booking Canceled",
+        description: "Your booking has been successfully canceled.",
+      });
+    } catch (error) {
+      console.error("Failed to delete booking:", error);
+      api.error({
+        message: "Booking Error",
+        description: "Booking could not be deleted.",
+      });
+    }
+  };
+
   return (
     <>
       <TopNav />
@@ -86,17 +126,14 @@ function MyBookings() {
           {/* Category Navigation */}
           <div className="flex justify-center items-center bg-gray-900 border rounded-full p-4 mb-8">
             <span className="text-teal-200 mx-7 cursor-pointer  hover:text-white hover:rounded-full hover:underline hover:underline-offset-4 hover:border-teal-200 transition duration-300">
-              Sunny
+              <button
+                className="border bg-teal-200 hover:bg-teal-300 text-black rounded-full px-4 py-2"
+                onClick={() => router.push("/home")}
+              >
+                Home
+              </button>
             </span>
-            <span className="text-teal-200 mx-7 cursor-pointer  hover:text-white hover:rounded-full hover:underline hover:underline-offset-4 hover:border-teal-200 transition duration-300">
-              Snow
-            </span>
-            <span className="text-teal-200 mx-7 cursor-pointer  hover:text-white hover:rounded-full hover:underline hover:underline-offset-4 hover:border-teal-200 transition duration-300">
-              Tropical
-            </span>
-            <span className="text-teal-200 mx-7 cursor-pointer  hover:text-white hover:rounded-full hover:underline hover:underline-offset-4 hover:border-teal-200 transition duration-300">
-              Adventure
-            </span>
+
             <span className="text-teal-200 mx-7 cursor-pointer  hover:text-white hover:rounded-full hover:underline hover:underline-offset-4 hover:border-teal-200 transition duration-300">
               <button
                 className="border bg-teal-200 hover:bg-teal-300 text-black rounded-full px-4 py-2"
@@ -106,38 +143,85 @@ function MyBookings() {
               </button>
             </span>
           </div>
-          <div className="flex flex-col items-center justify-center">
-            <h1 className="text-2xl font-bold">My Bookings</h1>
-            <Card>
-              <div className="flex flex-col items-center justify-center">
-                {bookings.map((booking) => {
-                  const listing = listings[booking.listingId];
-                  return (
-                    <div key={booking.id}>
-                      <h2 className="text-xl">
-                        Check-In:{" "}
-                        {new Date(booking.checkIn).toLocaleDateString()}
-                      </h2>
-                      <h2 className="text-xl">
-                        Check-Out:{" "}
-                        {new Date(booking.checkOut).toLocaleDateString()}
-                      </h2>
-                      <h2 className="text-xl">
-                        Total Price: ${booking.totalPrice}
-                      </h2>
+          <div className="flex flex-col items-center justify-center w-full">
+            <h1 className="text-3xl font-bold mb-6 text-white">My Bookings</h1>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
+              {bookings.map((booking) => {
+                const listing = listings[booking.listingId];
+                return (
+                  <Card
+                    key={booking.id}
+                    className="w-full bg-gray-800 text-white"
+                  >
+                    <CardHeader>
                       {listing && (
                         <>
-                          <h2 className="text-xl">Title: {listing.title}</h2>
-                          <h2 className="text-xl">City: {listing.city}</h2>
-                          <h2 className="text-xl">Price: ${listing.price}</h2>
-                          <img src={listing.image} alt={listing.title} />
+                          <CardTitle className="text-2xl text-teal-200">
+                            {listing.title}
+                          </CardTitle>
+                          <CardDescription className="text-lg text-gray-300">
+                            {listing.city}
+                          </CardDescription>
                         </>
                       )}
-                    </div>
-                  );
-                })}
-              </div>
-            </Card>
+                    </CardHeader>
+                    <CardContent>
+                      {listing && (
+                        <img
+                          src={listing.image}
+                          alt={listing.title}
+                          className="w-full h-48 object-cover rounded-md mb-4"
+                        />
+                      )}
+                      <div className="space-y-2">
+                        <p className="text-xl font-semibold">
+                          Price:
+                          <span className="text-teal-200">
+                            ${listing?.price}/night
+                          </span>
+                        </p>
+                        <p>
+                          Check-In:
+                          <span className="font-semibold">
+                            {new Date(booking.checkIn).toLocaleDateString()}
+                          </span>
+                        </p>
+                        <p>
+                          Check-Out:
+                          <span className="font-semibold">
+                            {new Date(booking.checkOut).toLocaleDateString()}
+                          </span>
+                        </p>
+                        <p className="text-lg font-semibold">
+                          Total Price:
+                          <span className="text-teal-200">
+                            ${booking.totalPrice}
+                          </span>
+                        </p>
+                        <div>
+                          <button className="bg-teal-200 text-black rounded-full px-4 py-2 pl-6 pr-6 hover:bg-teal-300 ">
+                            Booking Details
+                          </button>
+                        </div>
+
+                        <Popconfirm
+                          title="Are you sure you want to delete this booking?"
+                          description="This action cannot be undone."
+                          onConfirm={() => handleDeleteBooking(booking.id)}
+                          okText="Yes"
+                          cancelText="No"
+                        >
+                          <button className="bg-red-500 text-black rounded-full px-4 py-2 pl-6 pr-6 hover:bg-teal-300 ">
+                            Delete Booking
+                          </button>
+                        </Popconfirm>
+                      </div>
+                    </CardContent>
+                  </Card>
+                );
+              })}
+            </div>
           </div>
         </div>
       </div>

@@ -162,7 +162,9 @@ export default function ListingCards() {
             className="overflow-hidden w-full max-w-md bg-slate-400"
           >
             <CardHeader>
-              <CardTitle>{listing.title}</CardTitle>
+              <CardTitle className="text-2xl text-teal-200">
+                {listing.title}
+              </CardTitle>
               <CardTitle className="text-sm text-gray-800 underline mt-2">
                 {listing.city}
               </CardTitle>
@@ -176,7 +178,9 @@ export default function ListingCards() {
               <p className="text-sm text-gray-600 mb-2">
                 {listing.description}
               </p>
-              <p className="font-bold">${listing.price} / night</p>
+              <p className="font-bold  text-2xl">
+                <span className="text-teal-200">${listing.price} </span>/ night
+              </p>
             </CardContent>
             <CardFooter>
               <Button
