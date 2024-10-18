@@ -21,7 +21,7 @@ export function Login() {
   const [email, setEmail] = useState("''");
   const [password, setPassword] = useState("''");
   const [alert, setAlert] = useState<{
-    type: "success" | "error";
+    type: "success" | "error" | "loading";
     message: string;
     description: string;
   } | null>(null);
@@ -46,10 +46,15 @@ export function Login() {
         });
         return;
       }
+      // setAlert({
+      //   type: "loading",
+      //   message: "Logging in...",
+      //   description: "Please wait while we log you in",
+      // });
 
       setAlert({
         type: "success",
-        message: "Login successful",
+        message: "Login in...",
         description: "You have successfully logged in",
       });
 

@@ -16,6 +16,7 @@ import {
 
 import { Listing } from "@/types/listings";
 import { Booking } from "@/types/booking";
+import Link from "next/link";
 
 function MyBookings() {
   const router = useRouter();
@@ -126,21 +127,11 @@ function MyBookings() {
           {/* Category Navigation */}
           <div className="flex justify-center items-center bg-gray-900 border rounded-full p-4 mb-8">
             <span className="text-teal-200 mx-7 cursor-pointer  hover:text-white hover:rounded-full hover:underline hover:underline-offset-4 hover:border-teal-200 transition duration-300">
-              <button
-                className="border bg-teal-200 hover:bg-teal-300 text-black rounded-full px-4 py-2"
-                onClick={() => router.push("/home")}
-              >
-                Home
-              </button>
+              <Link href="/home">Home</Link>
             </span>
 
             <span className="text-teal-200 mx-7 cursor-pointer  hover:text-white hover:rounded-full hover:underline hover:underline-offset-4 hover:border-teal-200 transition duration-300">
-              <button
-                className="border bg-teal-200 hover:bg-teal-300 text-black rounded-full px-4 py-2"
-                onClick={() => router.push("/my-bookings")}
-              >
-                My Bookings
-              </button>
+              <Link href="/my-listings">My Listings</Link>
             </span>
           </div>
           <div className="flex flex-col items-center justify-center w-full">
@@ -182,14 +173,14 @@ function MyBookings() {
                           </span>
                         </p>
                         <p>
-                          Check-In:
+                          Check-In Date:
                           <span className="font-semibold">
                             {new Date(booking.checkIn).toLocaleDateString()}
                           </span>
                         </p>
                         <p>
-                          Check-Out:
-                          <span className="font-semibold">
+                          Check-Out Date:
+                          <span className="font-semibold ">
                             {new Date(booking.checkOut).toLocaleDateString()}
                           </span>
                         </p>

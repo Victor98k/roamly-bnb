@@ -1,58 +1,50 @@
-import { NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
 import { PrismaClient } from "@prisma/client";
 import { Listing } from "@/types/listings";
 
 const prisma = new PrismaClient();
 
-export async function POST(req: Request) {
+export async function GET(request: NextRequest) {
+  const { searchParams } = new URL(request.url);
+  const userId = searchParams.get("userId");
+
   try {
-    const body: Partial<Listing> = await req.json();
-    let [hasErrors, errors] = [false, {}];
-
-    if (
-      !body.title ||
-      !body.description ||
-      !body.price ||
-      !body.city ||
-      !body.image
-    ) {
-      hasErrors = true;
-      errors = { message: "Missing required fields" };
-    }
-
-    if (hasErrors) {
-      return NextResponse.json({ errors }, { status: 400 });
-    }
-
-    const newListing = await prisma.listings.create({
-      data: {
-        title: body.title,
-        description: body.description,
-        price: body.price,
-        city: body.city,
-        available: body.available,
-        image: body.image,
-      },
+    const listings = await prisma.listings.findMany({
+      where: userId ? { userId: userId } : {}, // Ensure userId is not null
     });
 
-    return NextResponse.json(newListing, { status: 201 });
-  } catch (error: any) {
-    console.error("Error processing request:", error.message);
+    return NextResponse.json(listings);
+  } catch (error) {
+    console.error("Error fetching listings:", error);
     return NextResponse.json(
-      { message: "Internal Server Error" },
+      { message: "Internal server error" },
       { status: 500 }
     );
   }
 }
 
-export async function GET() {
+export async function POST(request: NextRequest) {
   try {
-    const listings = await prisma.listings.findMany();
-    return NextResponse.json(listings, { status: 200 });
-  } catch (error: any) {
-    console.error("Error processing request:", error.message);
+    const body = await request.json();
+    const { title, description, city, price, image, userId } = body;
+
+    const newListing = await prisma.listings.create({
+      data: {
+        title,
+        description,
+        city,
+        price: parseFloat(price),
+        image,
+        available: true,
+        userId,
+      },
+    });
+
+    return NextResponse.json(newListing, { status: 201 });
+  } catch (error) {
+    console.error("Error creating listing:", error);
     return NextResponse.json(
-      { message: "Internal Server Error" },
+      { message: "Internal server error" },
       { status: 500 }
     );
   }

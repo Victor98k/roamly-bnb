@@ -18,26 +18,13 @@ const TopNav: React.FC = () => {
           <h1 className="text-3xl font-bold text-teal-200">Roamly</h1>
         </Link>
       </div>
-      {/* <ul className="flex space-x-4">
-        <li>
-          <Link href="/" className="text-gray-300 hover:text-teal-200">
-            <h2 className="text-xl font-bold">Home</h2>
-          </Link>
-        </li>
-        <li>
-          <a href="#link2" className="text-gray-300 hover:text-teal-200">
-            <h2 className="text-xl font-bold">About</h2>
-          </a>
-        </li>
-        <li>
-          <a href="#link3" className="text-gray-300 hover:text-teal-200">
-            <h2 className="text-xl font-bold">Contact</h2>
-          </a>
-        </li>
-      </ul> */}
+
       <div className="flex space-x-2">
         <button className="px-4 py-2 bg-teal-300 text-black rounded hover:bg-teal-400">
-          My Bookings
+          <Link href="/my-bookings">My Bookings</Link>
+        </button>
+        <button className="px-4 py-2 bg-teal-300 text-black rounded hover:bg-teal-400">
+          <Link href="/my-listings">My Listings</Link>
         </button>
         <button
           onClick={handleLogout}

@@ -1,0 +1,3 @@
+Dela upp ansvaret för severside och clientside. 
+
+Du gör dina API/ENDPOINT calls i actions och sedan importerar du dem i din client component. 

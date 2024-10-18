@@ -3,7 +3,7 @@ export type Listing = {
   title: string;
   description: string;
   city: string;
-  price: Float;
+  price: number;
   available: boolean;
   image: string;
   createdAt: Date;

@@ -45,9 +45,22 @@ export default function ListingCards() {
 
   useEffect(() => {
     const fetchListings = async () => {
-      const response = await fetch("/api/listings");
-      const data = await response.json();
-      setListings(data);
+      try {
+        const response = await fetch("/api/listings");
+        if (!response.ok) {
+          throw new Error("Failed to fetch listings");
+        }
+        const data = await response.json();
+        if (Array.isArray(data)) {
+          setListings(data);
+        } else {
+          console.error("Data is not an array:", data);
+          setListings([]); // Ensure listings is an array
+        }
+      } catch (error) {
+        console.error("Error fetching listings:", error);
+        setListings([]); // Ensure listings is an array
+      }
     };
 
     fetchListings();
@@ -64,7 +77,10 @@ export default function ListingCards() {
 
   const handleBooking = async () => {
     if (!selectedListing || !checkInDate || !checkOutDate) {
-      console.error("Missing booking details");
+      api.error({
+        message: "Booking Error",
+        description: "Missing booking details.",
+      });
       return;
     }
 
@@ -193,15 +209,22 @@ export default function ListingCards() {
               >
                 {listing.available ? "Book Now" : "Unavailable"}
               </Button>
+              {/* Add new range picker from ant with disabeled dates */}
               <Drawer
                 title={`Book ${selectedListing?.title}`}
                 open={isDrawerOpen}
                 onClose={handleDrawerClose}
-                maskStyle={{ backgroundColor: "transparent" }}
+                maskStyle={{
+                  backgroundColor: "transparent",
+                }}
+                style={{
+                  borderRadius: "15px",
+                }}
               >
                 <img
                   src={selectedListing?.image}
                   alt={selectedListing?.title}
+                  className="w-full h-50 object-cover mb-4 rounded-xl "
                 />
                 <div className="grid gap-4 py-4 ">
                   <DatePicker

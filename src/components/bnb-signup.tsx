@@ -35,7 +35,7 @@ export function Signup() {
     message: string;
     description: string;
   } | null>(null);
-  const router = useRouter(); // Initialize the router
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
