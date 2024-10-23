@@ -17,7 +17,7 @@ function PageHero() {
           </div>
         </h1>
         {/* Category Navigation */}
-        <div className="flex justify-center items-center bg-gray-900 border rounded-full p-4 mb-8">
+        <div className="flex justify-center items-center bg-gray-900 border rounded-full p-4 mb-2">
           <span className="text-teal-200 mx-7 cursor-pointer  hover:text-white hover:rounded-full hover:underline hover:underline-offset-4 hover:border-teal-200 transition duration-300">
             Sunny
           </span>

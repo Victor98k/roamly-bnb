@@ -36,7 +36,7 @@ export async function DELETE(request: NextRequest, options: APIOptions) {
 
   try {
     const listing = await prisma.listings.delete({
-      where: { id: Number(id) },
+      where: { id: id.toString() },
     });
 
     return NextResponse.json(
@@ -49,6 +49,29 @@ export async function DELETE(request: NextRequest, options: APIOptions) {
     return NextResponse.json(
       {
         message: "Listing not found or internal server error",
+      },
+      { status: 500 }
+    );
+  }
+}
+
+export async function PUT(request: NextRequest, options: APIOptions) {
+  const id = options.params.id;
+
+  try {
+    const body = await request.json();
+    const { title, description, city, price, image } = body;
+
+    const updatedListing = await prisma.listings.update({
+      where: { id: id.toString() },
+      data: { title, description, city, price, image },
+    });
+
+    return NextResponse.json(updatedListing);
+  } catch (error) {
+    return NextResponse.json(
+      {
+        message: "Internal server error",
       },
       { status: 500 }
     );
