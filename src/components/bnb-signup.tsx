@@ -23,7 +23,7 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { Facebook, Mail } from "lucide-react";
 import { Alert } from "antd";
-import TopNav from "@/components/topNav/topNav";
+
 export function Signup() {
   const [firstName, setFirstName] = useState("''");
   const [lastName, setLastName] = useState("''");
@@ -148,8 +148,8 @@ export function Signup() {
                     <SelectValue placeholder="Select user type" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="guest">Guest</SelectItem>
-                    <SelectItem value="host">Host</SelectItem>
+                    <SelectItem value="true">Guest</SelectItem>
+                    <SelectItem value="false">Admin</SelectItem>
                   </SelectContent>
                 </Select>
               </div>

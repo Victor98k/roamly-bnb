@@ -16,7 +16,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Facebook, Mail, Terminal } from "lucide-react";
 import { Alert } from "antd";
-
+import { Spin } from "antd";
 export function Login() {
   const [email, setEmail] = useState("''");
   const [password, setPassword] = useState("''");
@@ -54,7 +54,7 @@ export function Login() {
 
       setAlert({
         type: "success",
-        message: "Login in...",
+        message: "Login successful",
         description: "You have successfully logged in",
       });
 
@@ -82,7 +82,7 @@ export function Login() {
             <Alert
               message={alert.message}
               description={alert.description}
-              type={alert.type}
+              type={alert.type as "success" | "error" | "info" | "warning"}
               showIcon
               closable
               onClose={() => setAlert(null)}

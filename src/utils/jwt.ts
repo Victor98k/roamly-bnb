@@ -6,13 +6,11 @@ export type JWTUserPayload = {
   [key: string]: any;
 };
 
-// Ensure the environment variable is available
 const secret = process.env.JWT_SECRET;
 if (!secret) {
   throw new Error("JWT_SECRET environment variable is not set");
 }
 
-// Convert the secret into a Uint8Array
 const encodedSecret = new TextEncoder().encode(secret);
 
 export async function signJWT(payload: JWTUserPayload): Promise<string> {

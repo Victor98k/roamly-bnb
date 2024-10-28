@@ -47,7 +47,7 @@ export default function MyListings() {
         message: "Error",
         description: "Failed to fetch listings.",
       });
-      setListings([]); // Set to empty array on error
+      setListings([]);
     }
   };
 
