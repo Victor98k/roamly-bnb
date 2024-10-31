@@ -35,6 +35,9 @@ export default function ListingCards() {
   const [checkInDate, setCheckInDate] = useState<Date>();
   const [checkOutDate, setCheckOutDate] = useState<Date>();
   const [totalPrice, setTotalPrice] = useState(0);
+  const [isAdmin, setIsAdmin] = useState(
+    localStorage.getItem("isAdmin") === "true"
+  );
   const [customer, setCustomer] = useState<Customer>({
     firstName: "",
     lastName: "",
@@ -66,8 +69,6 @@ export default function ListingCards() {
     fetchListings();
   }, []);
 
-  // When making a new booking it may cause an error if the userId is not set.
-
   useEffect(() => {
     if (checkInDate && checkOutDate && selectedListing) {
       const days = dayjs(checkOutDate).diff(dayjs(checkInDate), "day");
@@ -95,7 +96,7 @@ export default function ListingCards() {
       userId: userId,
     };
 
-    console.log("Booking Data:", bookingData);
+    // console.log("Booking Data:", bookingData);
 
     try {
       const response = await fetch("/api/booking", {
@@ -117,7 +118,7 @@ export default function ListingCards() {
       }
 
       const newBooking = await response.json();
-      console.log("Booking created successfully:", newBooking);
+      // console.log("Booking created successfully:", newBooking);
 
       setIsDrawerOpen(false);
       setCheckInDate(undefined);
@@ -166,6 +167,34 @@ export default function ListingCards() {
   const cancel: PopconfirmProps["onCancel"] = (e) => {
     console.log(e);
     message.error("Booking not created");
+  };
+
+  const handleDeleteListing = async (listingId: string) => {
+    try {
+      const response = await fetch(`/api/listings/${listingId}`, {
+        method: "DELETE",
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to delete listing");
+      }
+
+      api.success({
+        message: "Success",
+        description: "Listing deleted successfully as Admin.",
+      });
+
+      // refresh listings after delete.
+      setListings((prevListings) =>
+        prevListings.filter((listing) => listing.id !== listingId)
+      );
+    } catch (error) {
+      console.error("Error deleting listing:", error);
+      api.error({
+        message: "Error",
+        description: "Failed to delete listing.",
+      });
+    }
   };
 
   return (
@@ -294,6 +323,22 @@ export default function ListingCards() {
                 <HeartFilled />
               </Button>
             </CardFooter>
+            {isAdmin === true && (
+              <Popconfirm
+                title="Are you sure you want to remove this listing?"
+                onConfirm={() => handleDeleteListing(listing.id)}
+                onCancel={cancel}
+                okText="Yes"
+                cancelText="No"
+              >
+                <Button
+                  danger
+                  className=" ml-5 mt-2 text-black bg-red-500 hover:bg-red-600 border border-gray-400 rounded-3xl px-4 py-2 mr-2 mb-4"
+                >
+                  Remove Listing as Admin
+                </Button>
+              </Popconfirm>
+            )}
           </Card>
         ))}
       </div>

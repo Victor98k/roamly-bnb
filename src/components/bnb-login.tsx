@@ -16,7 +16,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Facebook, Mail, Terminal } from "lucide-react";
 import { Alert } from "antd";
-import { Spin } from "antd";
 export function Login() {
   const [email, setEmail] = useState("''");
   const [password, setPassword] = useState("''");
@@ -59,8 +58,16 @@ export function Login() {
       });
 
       const data = await response.json();
+      console.log("Response data:", data);
+
       localStorage.setItem("token", data.token);
       localStorage.setItem("userId", data.userId);
+      localStorage.setItem("isAdmin", data.isAdmin);
+
+      // localStorage.setItem("userName", data.firstName);
+      // localStorage.setItem("userLastName", data.lastName);
+      // localStorage.setItem("userEmail", data.email);
+
       // console.log("Login successful:", data);
 
       router.push("/home");

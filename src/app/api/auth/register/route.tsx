@@ -10,7 +10,13 @@ export async function POST(req: Request) {
     const body: Partial<User> = await req.json();
     let [hasErros, errors] = [false, {}];
 
-    if (!body.firstName || !body.lastName || !body.email || !body.password) {
+    if (
+      !body.firstName ||
+      !body.lastName ||
+      !body.email ||
+      !body.isAdmin ||
+      !body.password
+    ) {
       hasErros = true;
       errors = { message: "Missing required fields" };
     }
@@ -27,7 +33,7 @@ export async function POST(req: Request) {
         lastName: body.lastName as string,
         email: body.email as string,
         password: await hashPassword(body.password as string),
-        isAdmin: body.isAdmin,
+        isAdmin: body.isAdmin as boolean,
       },
     });
 

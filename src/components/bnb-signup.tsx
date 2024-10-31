@@ -29,7 +29,7 @@ export function Signup() {
   const [lastName, setLastName] = useState("''");
   const [email, setEmail] = useState("''");
   const [password, setPassword] = useState("''");
-  const [userType, setUserType] = useState("''");
+  const [isAdmin, setIsAdmin] = useState(Boolean);
   const [alert, setAlert] = useState<{
     type: string;
     message: string;
@@ -50,7 +50,7 @@ export function Signup() {
           lastName,
           email,
           password,
-          userType,
+          isAdmin,
         }),
       });
 
@@ -143,13 +143,16 @@ export function Signup() {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="userType">I am a...</Label>
-                <Select onValueChange={setUserType} required>
+                <Select
+                  onValueChange={(value) => setIsAdmin(value === "false")}
+                  required
+                >
                   <SelectTrigger id="userType">
                     <SelectValue placeholder="Select user type" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="true">Guest</SelectItem>
                     <SelectItem value="false">Admin</SelectItem>
+                    <SelectItem value="true">Guest</SelectItem>
                   </SelectContent>
                 </Select>
               </div>

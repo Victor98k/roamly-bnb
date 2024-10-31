@@ -22,7 +22,7 @@ model User {
   email     String    @unique
   password  String
   passwordResetUUID String?
-  isAdmin   Boolean   @default(false)
+  isAdmin   Boolean   
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   bookings  Booking[] @relation("UserBookings")

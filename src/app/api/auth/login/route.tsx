@@ -43,10 +43,11 @@ export async function POST(request: NextRequest) {
     const token = await signJWT({
       userId: user.id,
     });
-
+    // Adding isAdmin here so i can use that in localstorage. To conditional render the remove as admin BTN.
     return NextResponse.json({
       token: token,
       userId: user.id,
+      isAdmin: user.isAdmin,
     });
   } catch (error: any) {
     console.log("Error: failed to login", error.message);
