@@ -48,6 +48,9 @@ export async function POST(request: NextRequest) {
       token: token,
       userId: user.id,
       isAdmin: user.isAdmin,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
     });
   } catch (error: any) {
     console.log("Error: failed to login", error.message);

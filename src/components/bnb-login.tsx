@@ -63,12 +63,9 @@ export function Login() {
       localStorage.setItem("token", data.token);
       localStorage.setItem("userId", data.userId);
       localStorage.setItem("isAdmin", data.isAdmin);
-
-      // localStorage.setItem("userName", data.firstName);
-      // localStorage.setItem("userLastName", data.lastName);
-      // localStorage.setItem("userEmail", data.email);
-
-      // console.log("Login successful:", data);
+      localStorage.setItem("userName", data.firstName);
+      localStorage.setItem("userLastName", data.lastName);
+      localStorage.setItem("userEmail", data.email);
 
       router.push("/home");
     } catch (error) {

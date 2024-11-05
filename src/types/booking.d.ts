@@ -1,9 +1,9 @@
-export type Customer = {
-  firstName: string;
-  lastName: string;
-  phone: string;
-  email: string;
-};
+// export type Customer = {
+//   firstName: string;
+//   lastName: string;
+//   phone: string;
+//   email: string;
+// };
 
 export type Booking = {
   id: string;
@@ -11,9 +11,17 @@ export type Booking = {
   checkIn: Date;
   checkOut: Date;
   totalPrice: number;
-  customer: Customer;
-  createdBy: string;
   property: string;
   userId: string;
   listingId: string;
+  updatedAt: Date;
+
+  user: UserBooking;
+};
+
+export type UserBooking = {
+  firstName: string;
+  lastName: string;
+  phone: string;
+  email: string;
 };

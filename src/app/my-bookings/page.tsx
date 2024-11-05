@@ -30,11 +30,12 @@ function MyBookings() {
     const fetchBookings = async () => {
       try {
         const userId = localStorage.getItem("userId");
+        // console.log("Retrieved userId:", userId);
         if (!userId) {
           throw new Error("User ID not found in localStorage");
         }
 
-        const response = await fetch("/api/booking");
+        const response = await fetch(`/api/booking?userId=${userId}`);
         if (!response.ok) {
           throw new Error(`Error fetching bookings: ${response.statusText}`);
         }

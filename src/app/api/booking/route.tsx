@@ -1,15 +1,15 @@
 import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
-import { Booking, Customer } from "@/types/booking";
+import { Booking } from "@/types/booking";
 
 const prisma = new PrismaClient();
 
-async function createCustomer(customerData: Partial<Customer>) {
-  const newCustomer = await prisma.customer.create({
-    data: customerData,
-  });
-  return newCustomer.id;
-}
+// async function createCustomer(customerData: Partial<Customer>) {
+//   const newCustomer = await prisma.customer.create({
+//     data: customerData,
+//   });
+//   return newCustomer.id;
+// }
 
 export async function POST(req: Request) {
   try {
@@ -19,11 +19,6 @@ export async function POST(req: Request) {
     if (
       !body.checkIn ||
       !body.checkOut ||
-      !body.customer ||
-      !body.customer.firstName ||
-      !body.customer.lastName ||
-      !body.customer.phone ||
-      !body.customer.email ||
       !body.listingId ||
       body.totalPrice === undefined ||
       !body.userId
@@ -37,26 +32,15 @@ export async function POST(req: Request) {
       return NextResponse.json({ errors }, { status: 400 });
     }
 
-    const customerId = await createCustomer({
-      // @ts-ignore
-      firstName: body.customer.firstName,
-      // @ts-ignore
-      lastName: body.customer.lastName,
-      // @ts-ignore
-      phone: body.customer.phone,
-      // @ts-ignore
-      email: body.customer.email,
-    });
-
     const newBooking = await prisma.booking.create({
       data: {
         checkIn: body.checkIn || new Date().toISOString(),
         checkOut: body.checkOut || new Date().toISOString(),
-        totalPrice: body.totalPrice ?? 0, // Provide a default value if undefined
+        totalPrice: body.totalPrice ?? 0,
         createdAt: new Date().toISOString(),
+
         listingId: body.listingId,
         userId: body.userId,
-        customerId: customerId,
       },
     });
 
@@ -70,9 +54,20 @@ export async function POST(req: Request) {
   }
 }
 
-export async function GET() {
+export async function GET(req: Request) {
   try {
-    const bookings = await prisma.booking.findMany();
+    const url = new URL(req.url);
+    const userId = url.searchParams.get("userId");
+    if (!userId) {
+      return NextResponse.json(
+        { message: "User ID is required" },
+        { status: 400 }
+      );
+    }
+
+    const bookings = await prisma.booking.findMany({
+      where: { userId: userId },
+    });
     return NextResponse.json(bookings, { status: 200 });
   } catch (error: any) {
     console.error("Error processing request:", error.message);

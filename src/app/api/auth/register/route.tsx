@@ -14,8 +14,8 @@ export async function POST(req: Request) {
       !body.firstName ||
       !body.lastName ||
       !body.email ||
-      !body.isAdmin ||
-      !body.password
+      !body.password ||
+      body.isAdmin === undefined
     ) {
       hasErros = true;
       errors = { message: "Missing required fields" };
@@ -25,8 +25,6 @@ export async function POST(req: Request) {
       return NextResponse.json({ errors }, { status: 400 });
     }
 
-    // IsAdmin is set defult to false.
-    // To create an admin user do so with postman.
     const newUser = await prisma.user.create({
       data: {
         firstName: body.firstName as string,

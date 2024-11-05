@@ -23,25 +23,31 @@ export async function GET(request: NextRequest) {
   }
 }
 
-export async function POST(request: NextRequest) {
+export async function POST(req: Request) {
   try {
-    const body = await request.json();
-    const { title, description, city, price, image, userId } = body;
+    const body = await req.json();
 
-    const newListing = await prisma.listings.create({
+    if (!body.title || !body.price || !body.userId || !body.createdBy) {
+      return NextResponse.json(
+        { message: "Missing required fields" },
+        { status: 400 }
+      );
+    }
+
+    const newListing = await prisma.listing.create({
       data: {
-        title,
-        description,
-        city,
-        price: parseFloat(price),
-        image,
-        available: true,
-        userId,
+        title: body.title,
+        description: body.description || "",
+        price: body.price,
+        createdAt: new Date().toISOString(),
+        createdBy: body.createdBy,
+        userId: body.userId,
+        // ... any other fields
       },
     });
 
     return NextResponse.json(newListing, { status: 201 });
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error creating listing:", error);
     return NextResponse.json(
       { message: "Internal server error" },

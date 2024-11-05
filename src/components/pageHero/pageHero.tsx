@@ -18,7 +18,7 @@ function PageHero() {
         </h1>
         {/* Category Navigation */}
         <div className="flex justify-center items-center bg-gray-900 border rounded-full p-4 mb-2">
-          <span className="text-teal-200 mx-7 cursor-pointer  hover:text-white hover:rounded-full hover:underline hover:underline-offset-4 hover:border-teal-200 transition duration-300">
+          {/* <span className="text-teal-200 mx-7 cursor-pointer  hover:text-white hover:rounded-full hover:underline hover:underline-offset-4 hover:border-teal-200 transition duration-300">
             Sunny
           </span>
           <span className="text-teal-200 mx-7 cursor-pointer  hover:text-white hover:rounded-full hover:underline hover:underline-offset-4 hover:border-teal-200 transition duration-300">
@@ -29,7 +29,7 @@ function PageHero() {
           </span>
           <span className="text-teal-200 mx-7 cursor-pointer  hover:text-white hover:rounded-full hover:underline hover:underline-offset-4 hover:border-teal-200 transition duration-300">
             Adventure
-          </span>
+          </span> */}
           <span className="text-teal-200 mx-7 cursor-pointer  hover:text-white hover:rounded-full hover:underline hover:underline-offset-4 hover:border-teal-200 transition duration-300">
             <Link href="/my-bookings">My Bookings</Link>
           </span>
@@ -40,7 +40,7 @@ function PageHero() {
             <Link href="/home">Home</Link>
           </span>
         </div>
-        {/* <ListingCards /> */}
+        <ListingCards />
       </div>
     </div>
   );

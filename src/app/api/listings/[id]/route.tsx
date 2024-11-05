@@ -31,12 +31,17 @@ export async function GET(request: NextRequest, options: APIOptions) {
   }
 }
 
+// Deleting a listing will remove all the bookings connected to that listing.
 export async function DELETE(request: NextRequest, options: APIOptions) {
-  const id = options.params.id;
+  const _id = options.params.id;
 
   try {
+    await prisma.booking.deleteMany({
+      where: { listingId: _id.toString() },
+    });
+
     await prisma.listings.delete({
-      where: { id: id.toString() },
+      where: { id: _id.toString() },
     });
 
     return NextResponse.json(
@@ -46,6 +51,7 @@ export async function DELETE(request: NextRequest, options: APIOptions) {
       { status: 200 }
     );
   } catch (error) {
+    console.error("Error deleting listing:", error);
     return NextResponse.json(
       {
         message: "Listing not found or internal server error",

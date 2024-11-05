@@ -13,7 +13,11 @@ import {
   Drawer,
 } from "antd";
 import type { PopconfirmProps } from "antd";
-import { HeartFilled } from "@ant-design/icons";
+import {
+  HeartFilled,
+  CheckCircleFilled,
+  CloseCircleFilled,
+} from "@ant-design/icons";
 import {
   Card,
   CardContent,
@@ -25,7 +29,8 @@ import {
 import dayjs from "dayjs";
 
 import { Listing } from "@/types/listings";
-import { Booking, Customer } from "@/types/booking";
+import { Booking } from "@/types/booking";
+import { userBooking } from "@/types/user";
 
 export default function ListingCards() {
   const [messageApi] = message.useMessage();
@@ -38,7 +43,7 @@ export default function ListingCards() {
   const [isAdmin, setIsAdmin] = useState(
     localStorage.getItem("isAdmin") === "true"
   );
-  const [customer, setCustomer] = useState<Customer>({
+  const [bookingInfo, setBookingInfo] = useState<userBooking>({
     firstName: "",
     lastName: "",
     phone: "",
@@ -85,18 +90,25 @@ export default function ListingCards() {
       return;
     }
 
-    const userId = localStorage.getItem("userId") || "";
+    const userId = localStorage.getItem("userId");
+    if (!userId) {
+      api.error({
+        message: "Booking Error",
+        description: "User ID is missing. Please log in again.",
+      });
+      return;
+    }
 
     const bookingData: Partial<Booking> = {
       checkIn: checkInDate,
       checkOut: checkOutDate,
       totalPrice: totalPrice,
-      customer: customer,
+      user: bookingInfo,
       listingId: selectedListing.id,
       userId: userId,
     };
 
-    // console.log("Booking Data:", bookingData);
+    console.log("Booking Data:", bookingData);
 
     try {
       const response = await fetch("/api/booking", {
@@ -118,12 +130,10 @@ export default function ListingCards() {
       }
 
       const newBooking = await response.json();
-      // console.log("Booking created successfully:", newBooking);
-
       setIsDrawerOpen(false);
       setCheckInDate(undefined);
       setCheckOutDate(undefined);
-      setCustomer({
+      setBookingInfo({
         firstName: "",
         lastName: "",
         phone: "",
@@ -159,10 +169,10 @@ export default function ListingCards() {
       content: "Booking created successfully",
     });
   };
-  const confirm: PopconfirmProps["onConfirm"] = (e) => {
-    console.log(e);
-    message.success("Booking created successfully");
-  };
+  // const confirm: PopconfirmProps["onConfirm"] = (e) => {
+  //   console.log(e);
+  //   message.success("Booking created successfully");
+  // };
 
   const cancel: PopconfirmProps["onCancel"] = (e) => {
     console.log(e);
@@ -213,6 +223,14 @@ export default function ListingCards() {
               <CardTitle className="text-sm text-gray-800 underline mt-2">
                 {listing.city}
               </CardTitle>
+              <b className="text-sm text-gray-800">Available</b>
+              {listing.available ? (
+                <CheckCircleFilled
+                  style={{ color: "green", fontSize: "24px" }}
+                />
+              ) : (
+                <CloseCircleFilled style={{ color: "red", fontSize: "24px" }} />
+              )}
             </CardHeader>
             <CardContent>
               <img
@@ -234,7 +252,7 @@ export default function ListingCards() {
                   showDrawer();
                 }}
                 disabled={!listing.available}
-                className="bg-teal-200 text-black hover:bg-teal-300 border  border-gray-400 rounded-3xl px-4 py-2 mr-2"
+                className="bg-sky-600 text-black hover:bg-teal-300 border  border-gray-400 rounded-3xl px-4 py-2 mr-2"
               >
                 {listing.available ? "Book Now" : "Unavailable"}
               </Button>
@@ -276,31 +294,43 @@ export default function ListingCards() {
 
                   <Input
                     placeholder="First Name"
-                    value={customer.firstName}
+                    value={bookingInfo.firstName}
                     onChange={(e) =>
-                      setCustomer({ ...customer, firstName: e.target.value })
+                      setBookingInfo({
+                        ...bookingInfo,
+                        firstName: e.target.value,
+                      })
                     }
                   />
                   <Input
                     placeholder="Last Name"
-                    value={customer.lastName}
+                    value={bookingInfo.lastName}
                     onChange={(e) =>
-                      setCustomer({ ...customer, lastName: e.target.value })
+                      setBookingInfo({
+                        ...bookingInfo,
+                        lastName: e.target.value,
+                      })
                     }
                   />
                   <Input
                     placeholder="Phone"
-                    value={customer.phone}
+                    value={bookingInfo.phone}
                     onChange={(e) =>
-                      setCustomer({ ...customer, phone: e.target.value })
+                      setBookingInfo({
+                        ...bookingInfo,
+                        phone: e.target.value,
+                      })
                     }
                   />
                   <Input
                     placeholder="Email"
                     type="email"
-                    value={customer.email}
+                    value={bookingInfo.email}
                     onChange={(e) =>
-                      setCustomer({ ...customer, email: e.target.value })
+                      setBookingInfo({
+                        ...bookingInfo,
+                        email: e.target.value,
+                      })
                     }
                   />
                   <p className="font-bold">Total Price: ${totalPrice}</p>
@@ -316,11 +346,11 @@ export default function ListingCards() {
                   <Button type="primary">Complete Booking</Button>
                 </Popconfirm>
               </Drawer>
-              <Button className="bg-teal-200 text-black hover:bg-teal-300 border border-gray-400 rounded-3xl px-4 py-2 mr-2">
+              {/* <Button className="bg-teal-200 text-black hover:bg-teal-300 border border-gray-400 rounded-3xl px-4 py-2 mr-2">
                 Details
-              </Button>
+              </Button> */}
               <Button className="bg-teal-200 text-black hover:bg-teal-300 border border-gray-400 rounded-3xl px-4 py-2">
-                <HeartFilled />
+                <HeartFilled className="text-red-500" />
               </Button>
             </CardFooter>
             {isAdmin === true && (

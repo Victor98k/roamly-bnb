@@ -15,7 +15,6 @@ export default function Home() {
       <TopNav />
       <div>
         <PageHero />
-        <ListingCards />
       </div>
     </>
   );

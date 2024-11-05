@@ -21,7 +21,6 @@ model User {
   lastName  String
   email     String    @unique
   password  String
-  passwordResetUUID String?
   isAdmin   Boolean   
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
@@ -47,6 +46,7 @@ model Listings {
   userId      String?   @db.ObjectId
   user        User?     @relation(fields: [userId], references: [id])
   bookings    Booking[] @relation("ListingBookings")
+  
 }
 
 // The Booking model has a field listingId which is a foreign key referencing the id field in the Listings model.
@@ -61,19 +61,18 @@ model Booking {
   checkIn    DateTime
   checkOut   DateTime
   totalPrice Float
-  customerId String   @db.ObjectId
-  customer   Customer @relation(fields: [customerId], references: [id], name: "CustomerBookings")
-  user       User     @relation(fields: [userId], references: [id], name: "UserBookings")
+  // createdBy  String 
+  user       User     @relation(fields: [userId], references: [id], name: "UserBookings") 
   listing    Listings @relation(fields: [listingId], references: [id], name: "ListingBookings")
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 }
 
-model Customer {
-  id        String    @id @default(auto()) @map("_id") @db.ObjectId
-  firstName String
-  lastName  String
-  phone     String
-  email     String
-  bookings  Booking[] @relation("CustomerBookings")
-}
+// model Customer {
+//   id        String    @id @default(auto()) @map("_id") @db.ObjectId
+//   firstName String
+//   lastName  String
+//   phone     String
+//   email     String
+//   bookings  Booking[] @relation("CustomerBookings")
+// }
