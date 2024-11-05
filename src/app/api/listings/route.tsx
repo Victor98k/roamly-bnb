@@ -10,7 +10,7 @@ export async function GET(request: NextRequest) {
 
   try {
     const listings = await prisma.listings.findMany({
-      where: userId ? { userId: userId } : {}, // Ensure userId is not null
+      where: userId ? { userId: userId } : {},
     });
 
     return NextResponse.json(listings);
@@ -27,22 +27,30 @@ export async function POST(req: Request) {
   try {
     const body = await req.json();
 
-    if (!body.title || !body.price || !body.userId || !body.createdBy) {
+    if (
+      !body.title ||
+      !body.description ||
+      !body.price ||
+      !body.userId ||
+      !body.city
+    ) {
       return NextResponse.json(
         { message: "Missing required fields" },
         { status: 400 }
       );
     }
 
-    const newListing = await prisma.listing.create({
+    const newListing = await prisma.listings.create({
       data: {
         title: body.title,
-        description: body.description || "",
+        description: body.description,
+        city: body.city,
         price: body.price,
-        createdAt: new Date().toISOString(),
-        createdBy: body.createdBy,
+        available: true,
+        image: body.image || "",
+        createdAt: new Date(),
+        updatedAt: new Date(),
         userId: body.userId,
-        // ... any other fields
       },
     });
 
@@ -50,7 +58,7 @@ export async function POST(req: Request) {
   } catch (error: any) {
     console.error("Error creating listing:", error);
     return NextResponse.json(
-      { message: "Internal server error" },
+      { message: "Internal server error", error: error.message },
       { status: 500 }
     );
   }

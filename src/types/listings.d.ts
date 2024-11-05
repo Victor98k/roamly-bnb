@@ -6,7 +6,7 @@ export type Listing = {
   price: number;
   available: boolean;
   image: string;
-
+  userId?: string;
   createdAt: Date;
   updatedAt: Date;
 };

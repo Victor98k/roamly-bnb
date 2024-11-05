@@ -29,7 +29,7 @@ import {
 import dayjs from "dayjs";
 
 import { Listing } from "@/types/listings";
-import { Booking } from "@/types/booking";
+import { Booking, UserBooking } from "@/types/booking";
 import { userBooking } from "@/types/user";
 
 export default function ListingCards() {
@@ -43,7 +43,7 @@ export default function ListingCards() {
   const [isAdmin, setIsAdmin] = useState(
     localStorage.getItem("isAdmin") === "true"
   );
-  const [bookingInfo, setBookingInfo] = useState<userBooking>({
+  const [bookingInfo, setBookingInfo] = useState<UserBooking>({
     firstName: "",
     lastName: "",
     phone: "",
@@ -99,16 +99,32 @@ export default function ListingCards() {
       return;
     }
 
+    if (
+      !bookingInfo.firstName ||
+      !bookingInfo.lastName ||
+      !bookingInfo.phone ||
+      !bookingInfo.email
+    ) {
+      api.error({
+        message: "Booking Error",
+        description: "Please fill in all contact information.",
+      });
+      return;
+    }
+
     const bookingData: Partial<Booking> = {
       checkIn: checkInDate,
       checkOut: checkOutDate,
       totalPrice: totalPrice,
-      user: bookingInfo,
+      createdBy: {
+        firstName: bookingInfo.firstName,
+        lastName: bookingInfo.lastName,
+        phone: bookingInfo.phone,
+        email: bookingInfo.email,
+      },
       listingId: selectedListing.id,
       userId: userId,
     };
-
-    console.log("Booking Data:", bookingData);
 
     try {
       const response = await fetch("/api/booking", {
@@ -147,6 +163,10 @@ export default function ListingCards() {
       });
     } catch (error) {
       console.error("Error creating booking:", error);
+      api.error({
+        message: "Booking Error",
+        description: "An unexpected error occurred.",
+      });
     }
   };
 
@@ -256,7 +276,7 @@ export default function ListingCards() {
               >
                 {listing.available ? "Book Now" : "Unavailable"}
               </Button>
-              {/* Add new range picker from ant with disabeled dates */}
+
               <Drawer
                 title={`Book ${selectedListing?.title}`}
                 open={isDrawerOpen}
@@ -302,6 +322,7 @@ export default function ListingCards() {
                       })
                     }
                   />
+
                   <Input
                     placeholder="Last Name"
                     value={bookingInfo.lastName}
@@ -312,6 +333,7 @@ export default function ListingCards() {
                       })
                     }
                   />
+
                   <Input
                     placeholder="Phone"
                     value={bookingInfo.phone}
@@ -322,6 +344,7 @@ export default function ListingCards() {
                       })
                     }
                   />
+
                   <Input
                     placeholder="Email"
                     type="email"
@@ -333,6 +356,7 @@ export default function ListingCards() {
                       })
                     }
                   />
+
                   <p className="font-bold">Total Price: ${totalPrice}</p>
                 </div>
                 <Popconfirm

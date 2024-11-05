@@ -26,9 +26,9 @@ export type UserLoginData = {
 //   newPassword: string;
 //   uuid: string;
 // };
-export type userBooking = {
-  firstName: string;
-  lastName: string;
-  phone: string;
-  email: string;
-};
+// export type userBooking = {
+//   firstName: string;
+//   lastName: string;
+//   phone: string;
+//   email: string;
+// };

@@ -59,7 +59,11 @@ export default function MyListings() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ ...values, userId }),
+        body: JSON.stringify({
+          ...values,
+          price: parseFloat(values.price), // Convert price to number
+          userId,
+        }),
       });
 
       if (!response.ok) {
@@ -225,11 +229,7 @@ export default function MyListings() {
             >
               <Input />
             </Form.Item>
-            <Form.Item
-              name="price"
-              label="Price"
-              rules={[{ required: true, message: "Please input the price!" }]}
-            >
+            <Form.Item name="price" label="Price">
               <Input type="number" />
             </Form.Item>
             <Form.Item

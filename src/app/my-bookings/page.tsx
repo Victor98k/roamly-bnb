@@ -160,55 +160,72 @@ function MyBookings() {
                     </CardHeader>
                     <CardContent>
                       {listing && (
-                        <img
-                          src={listing.image}
-                          alt={listing.title}
-                          className="w-full h-48 object-cover rounded-md mb-4"
-                        />
-                      )}
-                      <div className="space-y-2">
-                        <p className="text-xl font-semibold">
-                          Price:
-                          <span className="text-teal-200">
-                            ${listing?.price}/night
-                          </span>
-                        </p>
-                        <p>
-                          Check-In Date:
-                          <span className="font-semibold">
-                            {new Date(booking.checkIn).toLocaleDateString()}
-                          </span>
-                        </p>
-                        <p>
-                          Check-Out Date:
-                          <span className="font-semibold ">
-                            {new Date(booking.checkOut).toLocaleDateString()}
-                          </span>
-                        </p>
-                        <p className="text-lg font-semibold">
-                          Total Price:
-                          <span className="text-teal-200">
-                            ${booking.totalPrice}
-                          </span>
-                        </p>
-                        <div>
-                          <button className="bg-teal-200 text-black rounded-full px-4 py-2 pl-6 pr-6 hover:bg-teal-300 ">
-                            Booking Details
-                          </button>
-                        </div>
+                        <>
+                          <img
+                            src={listing.image}
+                            alt={listing.title}
+                            className="w-full h-48 object-cover rounded-md mb-4"
+                          />
+                          <div className="space-y-2">
+                            <p className="text-xl font-semibold">
+                              Price:{" "}
+                              <span className="text-teal-200">
+                                ${listing.price}/night
+                              </span>
+                            </p>
+                            <p>
+                              Check-In Date:
+                              <span className="font-semibold">
+                                {new Date(booking.checkIn).toLocaleDateString()}
+                              </span>
+                            </p>
+                            <p>
+                              Check-Out Date:
+                              <span className="font-semibold">
+                                {new Date(
+                                  booking.checkOut
+                                ).toLocaleDateString()}
+                              </span>
+                            </p>
+                            <p className="text-lg font-semibold">
+                              Total Price:{" "}
+                              <span className="text-teal-200">
+                                ${booking.totalPrice}
+                              </span>
+                            </p>
+                            {booking.createdBy && (
+                              <div className="mt-4">
+                                <p>
+                                  Booked by:{" "}
+                                  {(booking.createdBy as UserBooking).firstName}{" "}
+                                  {(booking.createdBy as UserBooking).lastName}
+                                </p>
+                                <p>
+                                  Contact:{" "}
+                                  {(booking.createdBy as UserBooking).email}
+                                </p>
+                              </div>
+                            )}
+                            <div>
+                              <button className="bg-teal-200 text-black rounded-full px-4 py-2 pl-6 pr-6 hover:bg-teal-300 ">
+                                Booking Details
+                              </button>
+                            </div>
 
-                        <Popconfirm
-                          title="Are you sure you want to delete this booking?"
-                          description="This action cannot be undone."
-                          onConfirm={() => handleDeleteBooking(booking.id)}
-                          okText="Yes"
-                          cancelText="No"
-                        >
-                          <button className="bg-red-500 text-black rounded-full px-4 py-2 pl-6 pr-6 hover:bg-teal-300 ">
-                            Delete Booking
-                          </button>
-                        </Popconfirm>
-                      </div>
+                            <Popconfirm
+                              title="Are you sure you want to delete this booking?"
+                              description="This action cannot be undone."
+                              onConfirm={() => handleDeleteBooking(booking.id)}
+                              okText="Yes"
+                              cancelText="No"
+                            >
+                              <button className="bg-red-500 text-black rounded-full px-4 py-2 pl-6 pr-6 hover:bg-teal-300 ">
+                                Delete Booking
+                              </button>
+                            </Popconfirm>
+                          </div>
+                        </>
+                      )}
                     </CardContent>
                   </Card>
                 );

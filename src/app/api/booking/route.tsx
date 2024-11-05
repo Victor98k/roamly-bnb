@@ -21,7 +21,8 @@ export async function POST(req: Request) {
       !body.checkOut ||
       !body.listingId ||
       body.totalPrice === undefined ||
-      !body.userId
+      !body.userId ||
+      !body.createdBy
     ) {
       hasErrors = true;
       errors = { message: "Missing required fields" };
@@ -37,8 +38,8 @@ export async function POST(req: Request) {
         checkIn: body.checkIn || new Date().toISOString(),
         checkOut: body.checkOut || new Date().toISOString(),
         totalPrice: body.totalPrice ?? 0,
+        createdBy: body.createdBy as any,
         createdAt: new Date().toISOString(),
-
         listingId: body.listingId,
         userId: body.userId,
       },

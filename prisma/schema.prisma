@@ -61,7 +61,7 @@ model Booking {
   checkIn    DateTime
   checkOut   DateTime
   totalPrice Float
-  // createdBy  String 
+  createdBy  Json?    
   user       User     @relation(fields: [userId], references: [id], name: "UserBookings") 
   listing    Listings @relation(fields: [listingId], references: [id], name: "ListingBookings")
   createdAt  DateTime @default(now())
