@@ -24,8 +24,8 @@ model User {
   isAdmin   Boolean   
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
-  bookings  Booking[] @relation("UserBookings")
-  listings  Listings[]
+  bookings  Booking[] @relation("UserBookings") // Many to many relationship 
+  listings  Listings[] // Many to many relationship 
 }
 
 
@@ -44,16 +44,15 @@ model Listings {
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
   userId      String?   @db.ObjectId
-  user        User?     @relation(fields: [userId], references: [id])
-  bookings    Booking[] @relation("ListingBookings")
+  user        User?     @relation(fields: [userId], references: [id]) // Many to one relationship 
+  bookings    Booking[] @relation("ListingBookings") // Many to many relationship 
   
 }
 
 // The Booking model has a field listingId which is a foreign key referencing the id field in the Listings model.
 // The listing field in the Booking model is a relation to the Listings model, using the listingId as the foreign key. 
 // This is part of the "ListingBookings" relation.'
-// Booking har en realtion till User, customer och listing. för att varje booking ska kunna associeras med en user, customer och listing. 
-// vilken listing, vilken customer och vilken user ska bokas. 
+
 model Booking {
   id         String   @id @default(auto()) @map("_id") @db.ObjectId
   userId     String   @db.ObjectId
@@ -68,11 +67,4 @@ model Booking {
   updatedAt  DateTime @updatedAt
 }
 
-// model Customer {
-//   id        String    @id @default(auto()) @map("_id") @db.ObjectId
-//   firstName String
-//   lastName  String
-//   phone     String
-//   email     String
-//   bookings  Booking[] @relation("CustomerBookings")
-// }
+

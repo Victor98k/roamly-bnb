@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/card";
 
 import { Listing } from "@/types/listings";
-import { Booking } from "@/types/booking";
+import { Booking, UserBooking } from "@/types/booking";
 import Link from "next/link";
 
 function MyBookings() {
@@ -196,13 +196,17 @@ function MyBookings() {
                             {booking.createdBy && (
                               <div className="mt-4">
                                 <p>
-                                  Booked by:{" "}
+                                  Booked for:{" "}
                                   {(booking.createdBy as UserBooking).firstName}{" "}
                                   {(booking.createdBy as UserBooking).lastName}
                                 </p>
                                 <p>
                                   Contact:{" "}
                                   {(booking.createdBy as UserBooking).email}
+                                </p>
+                                <p>
+                                  Phone:{" "}
+                                  {(booking.createdBy as UserBooking).phone}
                                 </p>
                               </div>
                             )}

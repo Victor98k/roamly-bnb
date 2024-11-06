@@ -30,7 +30,6 @@ import dayjs from "dayjs";
 
 import { Listing } from "@/types/listings";
 import { Booking, UserBooking } from "@/types/booking";
-import { userBooking } from "@/types/user";
 
 export default function ListingCards() {
   const [messageApi] = message.useMessage();
@@ -116,6 +115,7 @@ export default function ListingCards() {
       checkIn: checkInDate,
       checkOut: checkOutDate,
       totalPrice: totalPrice,
+
       createdBy: {
         firstName: bookingInfo.firstName,
         lastName: bookingInfo.lastName,

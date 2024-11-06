@@ -68,16 +68,25 @@ export async function PUT(request: NextRequest, options: APIOptions) {
     const body = await request.json();
     const { title, description, city, price, image } = body;
 
+    // Ensure price is converted to a Float if it exists
     const updatedListing = await prisma.listings.update({
       where: { id: id.toString() },
-      data: { title, description, city, price, image },
+      data: {
+        title,
+        description,
+        city,
+        price: price ? parseFloat(price) : undefined, // Convert price to a Float if it exists
+        image,
+      },
     });
 
     return NextResponse.json(updatedListing);
   } catch (error) {
+    console.error("Error updating listing:", error); // Add error logging
     return NextResponse.json(
       {
         message: "Internal server error",
+        details: error instanceof Error ? error.message : "Unknown error",
       },
       { status: 500 }
     );

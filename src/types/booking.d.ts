@@ -12,6 +12,7 @@ export type Booking = {
   checkOut: Date;
   totalPrice: number;
   createdBy: UserBooking;
+
   property: string;
   userId: string;
   listingId: string;

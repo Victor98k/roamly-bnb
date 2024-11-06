@@ -4,13 +4,6 @@ import { Booking } from "@/types/booking";
 
 const prisma = new PrismaClient();
 
-// async function createCustomer(customerData: Partial<Customer>) {
-//   const newCustomer = await prisma.customer.create({
-//     data: customerData,
-//   });
-//   return newCustomer.id;
-// }
-
 export async function POST(req: Request) {
   try {
     const body: Partial<Booking> = await req.json();
@@ -40,10 +33,19 @@ export async function POST(req: Request) {
         totalPrice: body.totalPrice ?? 0,
         createdBy: body.createdBy as any,
         createdAt: new Date().toISOString(),
-        listingId: body.listingId,
-        userId: body.userId,
+        listingId: body.listingId!, // Add ! to assert it's not undefined
+        userId: body.userId!, // Add ! to assert it's not undefined
+      },
+      include: {
+        user: true, // Include user data in the response .
+        listing: true, // Include the listing data in the response.
       },
     });
+
+    console.log(
+      "Created booking with nested data:",
+      JSON.stringify(newBooking, null, 2)
+    ); // Pretty print the result
 
     return NextResponse.json(newBooking, { status: 201 });
   } catch (error: any) {
@@ -78,41 +80,3 @@ export async function GET(req: Request) {
     );
   }
 }
-
-// export async function DELETE(req: Request) {
-//   try {
-//     const body: Partial<Booking> = await req.json();
-//     const { id } = body;
-
-//     if (!id) {
-//       return NextResponse.json(
-//         { message: "Missing booking ID" },
-//         { status: 400 }
-//       );
-//     }
-
-//     // Check if the booking exists before attempting to delete
-//     const existingBooking = await prisma.booking.findUnique({
-//       where: { id: _id },
-//     });
-
-//     if (!existingBooking) {
-//       return NextResponse.json(
-//         { message: "Booking not found" },
-//         { status: 404 }
-//       );
-//     }
-
-//     const deletedBooking = await prisma.booking.delete({
-//       where: { id: _id },
-//     });
-
-//     return NextResponse.json(deletedBooking, { status: 200 });
-//   } catch (error: any) {
-//     console.error("Error processing request:", error.message);
-//     return NextResponse.json(
-//       { message: "Internal Server Error" },
-//       { status: 500 }
-//     );
-//   }
-// }

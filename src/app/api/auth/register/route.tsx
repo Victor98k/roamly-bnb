@@ -5,49 +5,42 @@ import { hashPassword } from "@/utils/bcrypt";
 import { signJWT } from "@/utils/jwt";
 const prisma = new PrismaClient();
 
-export async function POST(req: Request) {
+export async function POST(request: Request) {
   try {
-    const body: Partial<User> = await req.json();
-    let [hasErros, errors] = [false, {}];
+    const body = await request.json();
+    const { firstName, lastName, email, password, isAdmin } = body;
 
-    if (
-      !body.firstName ||
-      !body.lastName ||
-      !body.email ||
-      !body.password ||
-      body.isAdmin === undefined
-    ) {
-      hasErros = true;
-      errors = { message: "Missing required fields" };
-    }
+    const hashedPassword = await hashPassword(password);
 
-    if (hasErros) {
-      return NextResponse.json({ errors }, { status: 400 });
-    }
-
-    const newUser = await prisma.user.create({
+    const user = await prisma.user.create({
       data: {
-        firstName: body.firstName as string,
-        lastName: body.lastName as string,
-        email: body.email as string,
-        password: await hashPassword(body.password as string),
-        isAdmin: body.isAdmin as boolean,
+        firstName,
+        lastName,
+        email,
+        password: hashedPassword,
+        isAdmin,
       },
     });
 
     const token = await signJWT({
-      userId: newUser.id,
+      userId: user.id,
     });
+
     return NextResponse.json(
       {
         token,
+        userId: user.id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        isAdmin: user.isAdmin,
       },
       { status: 201 }
     );
-  } catch (error: any) {
-    console.error("Error processing request:", error.message);
+  } catch (error) {
+    console.error("Registration error:", error);
     return NextResponse.json(
-      { message: "Internal Server Error" },
+      { error: "Failed to register user" },
       { status: 500 }
     );
   }

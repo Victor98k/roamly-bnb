@@ -25,10 +25,10 @@ import { Facebook, Mail } from "lucide-react";
 import { Alert } from "antd";
 
 export function Signup() {
-  const [firstName, setFirstName] = useState("''");
-  const [lastName, setLastName] = useState("''");
-  const [email, setEmail] = useState("''");
-  const [password, setPassword] = useState("''");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [isAdmin, setIsAdmin] = useState<boolean | undefined>(undefined);
   const [alert, setAlert] = useState<{
     type: string;
@@ -54,24 +54,42 @@ export function Signup() {
         }),
       });
 
+      const data = await response.json();
+
       if (!response.ok) {
         setAlert({
           type: "error",
           message: "Sign-up failed",
-          description: "Please check your details and try again",
+          description: data.error || "Please check your details and try again",
         });
         return;
       }
+
+      if (!data.token || !data.userId || data.firstName === undefined) {
+        throw new Error("Incomplete user data received");
+      }
+
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("userId", data.userId);
+      localStorage.setItem("isAdmin", String(data.isAdmin));
+      localStorage.setItem("userName", data.firstName);
+      localStorage.setItem("userLastName", data.lastName);
+      localStorage.setItem("userEmail", data.email);
+
       setAlert({
         type: "success",
         message: "Sign-up successful",
         description: "You have successfully signed up",
       });
 
-      const data = await response.json();
       router.push("/home");
     } catch (error) {
       console.error("Error:", error);
+      setAlert({
+        type: "error",
+        message: "Sign-up failed",
+        description: "An unexpected error occurred. Please try again.",
+      });
     }
   };
 

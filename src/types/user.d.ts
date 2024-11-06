@@ -20,15 +20,3 @@ export type UserLoginData = {
   email: string;
   password: string;
 };
-
-// export type UserResetPasswordData = {
-//   email: string;
-//   newPassword: string;
-//   uuid: string;
-// };
-// export type userBooking = {
-//   firstName: string;
-//   lastName: string;
-//   phone: string;
-//   email: string;
-// };
