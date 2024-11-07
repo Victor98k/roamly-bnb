@@ -34,11 +34,12 @@ export async function POST(req: Request) {
         checkIn: body.checkIn,
         checkOut: body.checkOut,
         totalPrice: body.totalPrice ?? 0,
-        createdBy: body.createdBy as any,
+        createdBy: body.createdBy as any, // WHY AS ANY HERE?
         createdAt: new Date().toISOString(),
         listingId: body.listingId!, // Adding ! to make sure it's not undefined.
         userId: body.userId!, // Adding ! to make sure it's not undefined,
       },
+      // FOR RESPONSE WE INCLUDE THE USER AND LISTING
       include: {
         user: true, // Include user data in the response .
         listing: true, // Include the listing data in the response.

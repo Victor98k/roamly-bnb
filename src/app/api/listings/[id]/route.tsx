@@ -37,16 +37,16 @@ export async function GET(request: NextRequest, options: APIOptions) {
 
 // Deleting a listing will remove all the bookings connected to that listing.
 export async function DELETE(request: NextRequest, options: APIOptions) {
-  const _id = options.params.id;
+  const id = options.params.id;
 
   try {
     // We delete all the bookings connected to the listing.
     await prisma.booking.deleteMany({
-      where: { listingId: _id.toString() },
+      where: { listingId: id.toString() },
     });
 
     await prisma.listings.delete({
-      where: { id: _id.toString() },
+      where: { id: id.toString() },
     });
 
     return NextResponse.json(
@@ -88,7 +88,7 @@ export async function PUT(request: NextRequest, options: APIOptions) {
 
     return NextResponse.json(updatedListing);
   } catch (error) {
-    console.error("Error updating listing:", error); // Add error logging
+    console.error("Error updating listing:", error);
     return NextResponse.json(
       {
         message: "Internal server error",
