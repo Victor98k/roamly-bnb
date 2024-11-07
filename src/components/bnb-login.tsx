@@ -17,8 +17,8 @@ import { Label } from "@/components/ui/label";
 import { Facebook, Mail, Terminal } from "lucide-react";
 import { Alert } from "antd";
 export function Login() {
-  const [email, setEmail] = useState("''");
-  const [password, setPassword] = useState("''");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [alert, setAlert] = useState<{
     type: "success" | "error" | "loading";
     message: string;

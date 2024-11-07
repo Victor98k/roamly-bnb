@@ -73,13 +73,16 @@ export default function ListingCards() {
     fetchListings();
   }, []);
 
+  // VG KRAV
+  // VG -  Booking (lätt): Totalpriset beräknas baserat på pris per natt och vistelselängd.
   useEffect(() => {
     if (checkInDate && checkOutDate && selectedListing) {
       const days = dayjs(checkOutDate).diff(dayjs(checkInDate), "day");
       setTotalPrice(days * selectedListing.price);
     }
   }, [checkInDate, checkOutDate, selectedListing]);
-
+  // VG KRAV
+  // VG -  Booking (lätt): Bokningar kan endast skapas av en inloggad användare och innehåller användaruppgifter (se ovan) och property. Totalpriset beräknas baserat på pris per natt och vistelselängd.
   const handleBooking = async () => {
     if (!selectedListing || !checkInDate || !checkOutDate) {
       api.error({
@@ -90,6 +93,7 @@ export default function ListingCards() {
     }
 
     const userId = localStorage.getItem("userId");
+    // Setting the userId in localstorage on login or signup. If the userId is not found in localstorage the user can´t make a booking.
     if (!userId) {
       api.error({
         message: "Booking Error",
@@ -112,6 +116,7 @@ export default function ListingCards() {
     }
 
     const bookingData: Partial<Booking> = {
+      // The booking data is Partial since we+re not setting the updatedAt etc.
       checkIn: checkInDate,
       checkOut: checkOutDate,
       totalPrice: totalPrice,
@@ -126,6 +131,7 @@ export default function ListingCards() {
       userId: userId,
     };
 
+    // Posting the booking data to the booking endpoint.
     try {
       const response = await fetch("/api/booking", {
         method: "POST",
@@ -199,6 +205,8 @@ export default function ListingCards() {
     message.error("Booking not created");
   };
 
+  // VG KRAV
+  // VG - En inloggad admin ska kunna ta bort listings.
   const handleDeleteListing = async (listingId: string) => {
     try {
       const response = await fetch(`/api/listings/${listingId}`, {
@@ -243,6 +251,7 @@ export default function ListingCards() {
               <CardTitle className="text-sm text-gray-800 underline mt-2">
                 {listing.city}
               </CardTitle>
+              {/* Is the listing avalible */}
               <b className="text-sm text-gray-800">Available</b>
               {listing.available ? (
                 <CheckCircleFilled
@@ -274,6 +283,7 @@ export default function ListingCards() {
                 disabled={!listing.available}
                 className="bg-sky-600 text-black hover:bg-teal-300 border  border-gray-400 rounded-3xl px-4 py-2 mr-2"
               >
+                {/* VG KRAV  */}
                 {/* Render the button based on if the listing is avalible or not.  */}
                 {listing.available ? "Book Now" : "Unavailable"}
               </Button>

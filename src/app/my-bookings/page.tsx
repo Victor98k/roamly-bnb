@@ -177,6 +177,7 @@ function MyBookings() {
                               Check-In Date:
                               <span className="font-semibold">
                                 {new Date(booking.checkIn).toLocaleDateString()}
+                                {/* Convert the checkIn date to a string */}
                               </span>
                             </p>
                             <p>
@@ -185,6 +186,7 @@ function MyBookings() {
                                 {new Date(
                                   booking.checkOut
                                 ).toLocaleDateString()}
+                                {/* Convert the checkOut date to a string */}
                               </span>
                             </p>
                             <p className="text-lg font-semibold">

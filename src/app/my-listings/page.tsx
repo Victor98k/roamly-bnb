@@ -87,6 +87,8 @@ export default function MyListings() {
     }
   };
 
+  // VG KRAV
+  // VG - En inloggad användare ska kunna ta bort listings.
   const handleDeleteListing = async (listingId: string) => {
     try {
       await fetch(`/api/listings/${listingId}`, { method: "DELETE" });
