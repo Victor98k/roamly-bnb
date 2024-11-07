@@ -34,7 +34,7 @@ export async function POST(req: Request) {
         checkIn: body.checkIn,
         checkOut: body.checkOut,
         totalPrice: body.totalPrice ?? 0,
-        createdBy: body.createdBy as any, // WHY AS ANY HERE?
+        createdBy: body.createdBy,
         createdAt: new Date().toISOString(),
         listingId: body.listingId!, // Adding ! to make sure it's not undefined.
         userId: body.userId!, // Adding ! to make sure it's not undefined,

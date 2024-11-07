@@ -29,6 +29,7 @@ function PageHero() {
           </span>
         </div>
         <ListingCards />
+        {/* Listing cards inside the page hero to clear up styling */}
       </div>
     </div>
   );

@@ -8,7 +8,8 @@ export default function Home() {
     <>
       <TopNav />
       <div>
-        <PageHero />
+        <PageHero />{" "}
+        {/* Listing cards inside the page hero to clear up styling */}
       </div>
     </>
   );

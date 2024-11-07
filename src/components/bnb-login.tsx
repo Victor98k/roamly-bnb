@@ -57,12 +57,13 @@ export function Login() {
         description: "You have successfully logged in",
       });
 
+      // VG - Krav
+      // Set the isAdmin to later use for deleteing all listings as admin.
       const data = await response.json();
-      console.log("Response data:", data);
-
+      // console.log("Response data:", data);
       localStorage.setItem("token", data.token);
       localStorage.setItem("userId", data.userId);
-      localStorage.setItem("isAdmin", data.isAdmin);
+      localStorage.setItem("isAdmin", data.isAdmin); // Farliga grejer, since the user can change localStorage.
       localStorage.setItem("userName", data.firstName);
       localStorage.setItem("userLastName", data.lastName);
       localStorage.setItem("userEmail", data.email);

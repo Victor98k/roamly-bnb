@@ -71,7 +71,7 @@ export function Signup() {
 
       localStorage.setItem("token", data.token);
       localStorage.setItem("userId", data.userId);
-      localStorage.setItem("isAdmin", String(data.isAdmin));
+      localStorage.setItem("isAdmin", String(data.isAdmin)); // Farliga grejer, since the user can change localStorage.
       localStorage.setItem("userName", data.firstName);
       localStorage.setItem("userLastName", data.lastName);
       localStorage.setItem("userEmail", data.email);

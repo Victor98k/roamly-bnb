@@ -93,6 +93,8 @@ export default function ListingCards() {
     }
 
     const userId = localStorage.getItem("userId");
+    // VG KRAV
+    // VG -  Booking (lätt): Bokningar kan endast skapas av en inloggad användare och innehåller användaruppgifter (se ovan) och property. Totalpriset beräknas baserat på pris per natt och vistelselängd.
     // Setting the userId in localstorage on login or signup. If the userId is not found in localstorage the user can´t make a booking.
     if (!userId) {
       api.error({
@@ -390,6 +392,8 @@ export default function ListingCards() {
                 <HeartFilled className="text-red-500" />
               </Button>
             </CardFooter>
+            {/* VG KRAV */}
+            {/* Only the admin can delete the listing. */}
             {isAdmin === true && (
               <Popconfirm
                 title="Are you sure you want to remove this listing?"
@@ -402,6 +406,7 @@ export default function ListingCards() {
                   danger
                   className=" ml-5 mt-2 text-black bg-red-500 hover:bg-red-600 border border-gray-400 rounded-3xl px-4 py-2 mr-2 mb-4"
                 >
+                  {/* Only the admin can delete the listing. */}
                   Remove Listing as Admin
                 </Button>
               </Popconfirm>

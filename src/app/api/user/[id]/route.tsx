@@ -31,6 +31,7 @@ export async function GET(request: NextRequest, options: APIOptions) {
   }
 }
 
+// Thoose not exists in the client as of now.
 export async function DELETE(request: NextRequest, options: APIOptions) {
   const id = options.params.id;
 
