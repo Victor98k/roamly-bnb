@@ -8,7 +8,7 @@ export async function GET(request: NextRequest, options: APIOptions) {
 
   try {
     const user = await prisma.user.findUnique({
-      where: { id: Number(id) },
+      where: { id: id },
     });
 
     if (!user) {
@@ -36,7 +36,7 @@ export async function DELETE(request: NextRequest, options: APIOptions) {
 
   try {
     const user = await prisma.user.delete({
-      where: { id: Number(id) },
+      where: { id: id },
     });
 
     return NextResponse.json(

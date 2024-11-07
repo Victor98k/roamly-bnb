@@ -10,3 +10,13 @@ export type Listing = {
   createdAt: Date;
   updatedAt: Date;
 };
+
+// Type for updating Listing :)
+export type CreateListing = {
+  title: string;
+  description: string;
+  city: string;
+  price: number | float;
+  userId: string;
+  image: string;
+};

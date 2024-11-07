@@ -16,7 +16,7 @@ import {
   PopconfirmProps,
 } from "antd";
 import { useRouter } from "next/navigation";
-import { Listing } from "@/types/listings";
+import { Listing, CreateListing } from "@/types/listings";
 
 export default function MyListings() {
   const [messageApi] = message.useMessage();
@@ -51,7 +51,7 @@ export default function MyListings() {
     }
   };
 
-  const handleCreateListing = async (values: any) => {
+  const handleCreateListing = async (values: CreateListing) => {
     try {
       const userId = localStorage.getItem("userId");
       const response = await fetch("/api/listings", {
@@ -61,6 +61,7 @@ export default function MyListings() {
         },
         body: JSON.stringify({
           ...values,
+          // Using the spread operator to copy all the form values before modyfing the price and aso setting the userId.
           price: parseFloat(values.price), // Convert price to number
           userId,
         }),

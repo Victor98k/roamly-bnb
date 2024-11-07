@@ -1,24 +1,31 @@
 import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
-import { User } from "@/types/user";
+import { UserRegistrationData } from "@/types/user";
+import { userRegistrationValidator } from "@/utils/validators/userValidator";
 import { hashPassword } from "@/utils/bcrypt";
 import { signJWT } from "@/utils/jwt";
 const prisma = new PrismaClient();
 
 export async function POST(request: Request) {
   try {
-    const body = await request.json();
-    const { firstName, lastName, email, password, isAdmin } = body;
+    // Using the UserRegistrationData type here to aviod errors.
+    const body: UserRegistrationData = await request.json();
+    //
+    const [hasErrors, errors] = userRegistrationValidator(body);
+    // Validating the data using the userRegistrationValidator function.
+    if (hasErrors) {
+      return NextResponse.json({ errors }, { status: 400 });
+    }
 
-    const hashedPassword = await hashPassword(password);
+    const hashedPassword = await hashPassword(body.password);
 
     const user = await prisma.user.create({
       data: {
-        firstName,
-        lastName,
-        email,
+        firstName: body.firstName,
+        lastName: body.lastName,
+        email: body.email,
         password: hashedPassword,
-        isAdmin,
+        isAdmin: body.isAdmin,
       },
     });
 

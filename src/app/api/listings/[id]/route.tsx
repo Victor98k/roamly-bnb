@@ -4,7 +4,11 @@ import { NextResponse, NextRequest } from "next/server";
 const prisma = new PrismaClient();
 
 export async function GET(request: NextRequest, options: APIOptions) {
+  // NextRequest contains the request details, APIOptions contains route parameters, including the dynamic id.
+
+  //
   const id = options.params.id;
+  // We extract the ID from the request PARAMS. Ex, /api/listings/123 where "123" is the ID
 
   try {
     const listing = await prisma.listings.findUnique({
@@ -36,6 +40,7 @@ export async function DELETE(request: NextRequest, options: APIOptions) {
   const _id = options.params.id;
 
   try {
+    // We delete all the bookings connected to the listing.
     await prisma.booking.deleteMany({
       where: { listingId: _id.toString() },
     });
@@ -66,6 +71,7 @@ export async function PUT(request: NextRequest, options: APIOptions) {
 
   try {
     const body = await request.json();
+    // LETS not specify the listing type bcuz the user might not change all fields.
     const { title, description, city, price, image } = body;
 
     // Ensure price is converted to a Float if it exists

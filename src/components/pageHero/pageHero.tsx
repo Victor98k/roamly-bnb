@@ -1,5 +1,5 @@
 import Link from "next/link";
-import ListingCards from "../listingCards/listingCards";
+import ListingCards from "../listing-cards";
 
 function PageHero() {
   return (
@@ -18,18 +18,6 @@ function PageHero() {
         </h1>
         {/* Category Navigation */}
         <div className="flex justify-center items-center bg-gray-900 border rounded-full p-4 mb-2">
-          {/* <span className="text-teal-200 mx-7 cursor-pointer  hover:text-white hover:rounded-full hover:underline hover:underline-offset-4 hover:border-teal-200 transition duration-300">
-            Sunny
-          </span>
-          <span className="text-teal-200 mx-7 cursor-pointer  hover:text-white hover:rounded-full hover:underline hover:underline-offset-4 hover:border-teal-200 transition duration-300">
-            Snow
-          </span>
-          <span className="text-teal-200 mx-7 cursor-pointer  hover:text-white hover:rounded-full hover:underline hover:underline-offset-4 hover:border-teal-200 transition duration-300">
-            Tropical
-          </span>
-          <span className="text-teal-200 mx-7 cursor-pointer  hover:text-white hover:rounded-full hover:underline hover:underline-offset-4 hover:border-teal-200 transition duration-300">
-            Adventure
-          </span> */}
           <span className="text-teal-200 mx-7 cursor-pointer  hover:text-white hover:rounded-full hover:underline hover:underline-offset-4 hover:border-teal-200 transition duration-300">
             <Link href="/my-bookings">My Bookings</Link>
           </span>

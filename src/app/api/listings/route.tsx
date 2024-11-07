@@ -1,16 +1,17 @@
 import { NextResponse, NextRequest } from "next/server";
 import { PrismaClient } from "@prisma/client";
-import { Listing } from "@/types/listings";
+import { CreateListing } from "@/types/listings";
 
 const prisma = new PrismaClient();
 
+// Get all listing for logged in USER.
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const userId = searchParams.get("userId");
 
   try {
     const listings = await prisma.listings.findMany({
-      where: userId ? { userId: userId } : {},
+      where: userId ? { userId: userId } : {}, // If no userId is provided we return ALL listings. With the empty måsvingar.
     });
 
     return NextResponse.json(listings);
@@ -25,7 +26,10 @@ export async function GET(request: NextRequest) {
 
 export async function POST(req: Request) {
   try {
-    const body = await req.json();
+    //                             Using our CreateListing type to keep it safe :)
+    const body = (await req.json()) as CreateListing;
+    // Await the request we send from the frontend to check so that the data is correct.
+    // If data is missing we can´t use the body object we recive from the frontend.
 
     if (
       !body.title ||

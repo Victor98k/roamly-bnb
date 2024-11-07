@@ -10,10 +10,11 @@ export type User = {
 };
 
 export type UserRegistrationData = {
-  firstName: string | null;
-  lastName: string | null;
+  firstName: string;
+  lastName: string;
   email: string;
   password: string;
+  isAdmin: boolean;
 };
 
 export type UserLoginData = {
