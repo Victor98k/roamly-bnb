@@ -11,7 +11,7 @@ export type Listing = {
   updatedAt: Date;
 };
 
-// Type for updating Listing :)
+// Type for creating Listing :)
 export type CreateListing = {
   title: string;
   description: string;

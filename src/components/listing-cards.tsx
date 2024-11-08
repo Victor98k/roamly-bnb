@@ -42,12 +42,9 @@ export default function ListingCards() {
   const [isAdmin, setIsAdmin] = useState(
     localStorage.getItem("isAdmin") === "true"
   );
-  const [bookingInfo, setBookingInfo] = useState<UserBooking>({
-    firstName: "",
-    lastName: "",
-    phone: "",
-    email: "",
-  });
+  const [bookingInfo, setBookingInfo] = useState<UserBooking>(
+    {} as UserBooking
+  );
   const [api, contextHolder] = notification.useNotification();
 
   useEffect(() => {
@@ -157,12 +154,7 @@ export default function ListingCards() {
       setIsDrawerOpen(false);
       setCheckInDate(undefined);
       setCheckOutDate(undefined);
-      setBookingInfo({
-        firstName: "",
-        lastName: "",
-        phone: "",
-        email: "",
-      });
+      setBookingInfo({} as UserBooking);
       setTotalPrice(0);
 
       api.success({
